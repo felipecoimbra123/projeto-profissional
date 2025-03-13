@@ -8,3 +8,38 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+body{
+    background-color: wheat;
+}
+
+header{
+    background-color: #FF6600;
+    padding: 30px;
+}
+
+ul{
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+}
+
+a{
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    font-family: "Lato", sans-serif;
+
+    &:hover {
+        color: black;
+    }
+}
+
+hr{
+    width: 300px;
+}
+
+h2{
+    font-family: "Lexend", sans-serif;
+}
