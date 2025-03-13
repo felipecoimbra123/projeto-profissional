@@ -8,7 +8,7 @@
 }
 
 body {
-    background: linear-gradient(#fe6a0091, #9966ccb7) no-repeat;
+    background: linear-gradient(#fe6a0091, #9966ccc1) no-repeat;
     background-size: cover;
     min-height: 100vh;
     min-height: 100svh;
@@ -45,6 +45,7 @@ h2 {
     text-align: center;
     font-size: 35px;
     margin: 40px;
+    color: white;
 }
 
 .form-div {
@@ -79,6 +80,11 @@ h2 {
     background-color: #FF6600;
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+
+    &:hover{
+        opacity: 0.5;
+        color: black;
+    }
 }
 
 a {
