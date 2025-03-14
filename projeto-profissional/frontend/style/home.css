@@ -37,9 +37,33 @@ a{
 }
 
 hr{
-    width: 300px;
+    width: 400px;
 }
 
 h2{
-    font-family: "Lexend", sans-serif;
+    font-family: "Lato", sans-serif;
+    text-transform: uppercase;
+    font-weight: 400;
+    margin-left: 10px;
+}
+
+.div-home-photo{
+    margin-top: 60px;
+}
+
+.div-images{
+    display: flex;
+    margin-top: 20px;
+}
+
+
+.div-images img{
+    padding: 10px;
+    height: 180px;
+}
+
+.setas-home{
+    max-width: 200px;
+    max-height: 100px;
+    margin: auto;
 }
