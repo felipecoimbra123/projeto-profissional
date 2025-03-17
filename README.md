@@ -12,3 +12,28 @@
 * Navegação entre páginas
 * Formulário de Cadastro
 * Formulário de Login
+
+# Acessibilidade
+- [x] Elementos não textuais
+    - [x] Todas as imagens têm um texto alternativo (alt)
+    - [x] Os itens não textuais têm uma versão alternativa em texto
+    - [x] Não são usadas imagens que contêm blocos de texto
+- [x] Formulários
+    - [ ] Todos os campos dos formulários têm uma <label> associada
+    - [x] São usados <fieldset> e <legend> para agrupar os vários campos nos formulários
+    - [x] O envio dos formulários é feito via input/button e não através de links e JavaScript
+    - [ ] Os erros nos formulários são indicados em texto e junto do campo que contém o erro
+- [x] Uso da cor e elementos que piscam
+    - [x] Não é usada apenas a cor para transmitir informação
+    - [x] Não há elementos que piscam ou mudam de cores repetidamente
+- [x] Navegação
+    - [] São fornecidos atalhos para saltar links repetitivos
+    - [x] O <title> das páginas é claro, direto e percetível e está intimamente relacionado com o conteúdo da mesma
+    - [x] O site é navegável usando apenas o teclado
+- [x] Semântica e Legibilidade
+    - [x] O conteúdo está estruturado de forma semântica
+    - [x] O idioma da página está indicado no HTML
+    - [x] As tabelas têm headings <th> definidos
+    - [x] O site funciona com as imagens desativadas
+    - [x] O site é legível e navegável com o CSS desativado
+    - [x] O site é legível aumentando o texto 2 vezes

@@ -50,15 +50,19 @@ h2 {
 
 .form-div {
     display: flex;
-    align-items: center;
     justify-content: center;
+    flex-direction: column;
     padding: 7px;
+}
+
+.form-div label{
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
 }
 
 .form-div input {
     border: none;
     font-size: 15px;
-    width: 550px;
     outline: none;
     padding: 15px;
     border-radius: 10px;
