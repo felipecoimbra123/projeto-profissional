@@ -15,11 +15,11 @@
 
 # Acessibilidade
 - [x] Elementos não textuais
-    - [x] Todas as imagens têm um texto alternativo (alt)
-    - [x] Os itens não textuais têm uma versão alternativa em texto
-    - [x] Não são usadas imagens que contêm blocos de texto
+    - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
+    - [x] Os itens não textuais têm uma versão alternativa em texto. Mesma coisa que acima, os únicos itens não textuais até agora são as imagens.
+    - [x] Não são usadas imagens que contêm blocos de texto. Não estão sendo usadas, está sendo usado elementos diretamente para texto.
 - [x] Formulários
-    - [ ] Todos os campos dos formulários têm uma <label> associada
+    - [x] Todos os campos dos formulários têm uma <label> associada
     - [x] São usados <fieldset> e <legend> para agrupar os vários campos nos formulários
     - [x] O envio dos formulários é feito via input/button e não através de links e JavaScript
     - [ ] Os erros nos formulários são indicados em texto e junto do campo que contém o erro
@@ -27,7 +27,7 @@
     - [x] Não é usada apenas a cor para transmitir informação
     - [x] Não há elementos que piscam ou mudam de cores repetidamente
 - [x] Navegação
-    - [ ] São fornecidos atalhos para saltar links repetitivos
+    - [] São fornecidos atalhos para saltar links repetitivos
     - [x] O <title> das páginas é claro, direto e percetível e está intimamente relacionado com o conteúdo da mesma
     - [x] O site é navegável usando apenas o teclado
 - [x] Semântica e Legibilidade
