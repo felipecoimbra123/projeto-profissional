@@ -27,7 +27,7 @@
     - [x] Não é usada apenas a cor para transmitir informação
     - [x] Não há elementos que piscam ou mudam de cores repetidamente
 - [x] Navegação
-    - [] São fornecidos atalhos para saltar links repetitivos
+    - [ ] São fornecidos atalhos para saltar links repetitivos
     - [x] O <title> das páginas é claro, direto e percetível e está intimamente relacionado com o conteúdo da mesma
     - [x] O site é navegável usando apenas o teclado
 - [x] Semântica e Legibilidade
