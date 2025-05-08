@@ -53,6 +53,7 @@ h2 {
     justify-content: center;
     flex-direction: column;
     padding: 7px;
+    gap: 10px;
 }
 
 .form-div label{
