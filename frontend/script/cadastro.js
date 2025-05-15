@@ -6,12 +6,11 @@ formRegister.addEventListener('submit', async (e) => {
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
     const senha = document.getElementById('senha').value;
-    const senhaConfirmacao = document.getElementById('senha-confirmacao').value;
 
     const response = await fetch('http://localhost:3000/usuario/cadastro', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ nome, email, senha, senhaConfirmacao })
+        body: JSON.stringify({ nome, email, senha})
     })
 
     const result = await response.json();

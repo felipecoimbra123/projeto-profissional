@@ -30,6 +30,15 @@ body {
     -webkit-backdrop-filter: blur(8px);
 }
 
+.form-login{
+    border: 2px solid black;
+    border-radius: 10px;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
 h1 {
     font-family: "Sora", sans-serif;
     text-transform: uppercase;
