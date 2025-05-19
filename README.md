@@ -90,7 +90,7 @@
 
 ## 📌 Anotações
 
-- Data do próximo check-in: `26/05/2025`
+- Data do próximo check-in: `06/06/2025`
 - Dificuldades enfrentadas:
     - …
 - Próximas metas:
