@@ -16,7 +16,7 @@ formLogin.addEventListener('submit', async (e) => {
 
     if (result.success) {
         alert('Login bem-sucedido!');
-        localStorage.setItem('usuario', JSON.stringify(result.data))
+        localStorage.setItem('usuario' , JSON.stringify(result.data))
         window.location.href = 'index.html'
     } else {
         alert('Login não concluído')

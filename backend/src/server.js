@@ -26,15 +26,15 @@ app.post('/usuario/login', (req, res) => {
     const query = 'SELECT * FROM usuario WHERE nome = ? AND senha = ?'
     connection.query(query, [nome, senha], (err, results) => {
         if (err) {
-            return res.status(500).json({ success: false, err, message: 'Erro no servidor'})
+            return res.status(500).json({ success: false, message: 'Erro no servidor' })
+        }
+
+        if (results.length > 0) {
+            res.json({ success: true, message: 'Sucesso no login!', data: results[0]})
+        } else {
+            res.json({ success: false, message: 'Usuário ou senha incorretos!' })
         }
     })
-
-    if (results.length > 0) {
-        res.json({ success: true, message: 'Sucesso no login!', data: results[0]})
-    } else {
-        res.json({ success: false, message: 'Usuário ou senha incorretos!' })
-    }
 })
 
 app.listen(port, () => {
