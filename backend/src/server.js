@@ -1,6 +1,6 @@
 const express = require('express')
 const cors = require('cors')
-const connection = require('./db_config')
+const connection = require('./lib/db_config')
 const app = express()
 
 app.use(cors())
