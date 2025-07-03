@@ -33,6 +33,7 @@ a{
 
     &:hover {
         color: black;
+        transition: 0.7s;
     }
 }
 
