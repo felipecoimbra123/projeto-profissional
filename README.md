@@ -21,33 +21,34 @@
 - [x]  Estruturar diretórios do projeto
 - [x]  Criar diagrama ER/MER
 - [x]  Criar o banco de dados com tabelas como: usuario, artigo, fotografia, comentario, seguir…
-- [ ]  Criar formulários de cadastro/login
+- [x]  Criar formulários de cadastro/login
 - [x]  Criar as entidades e conexão com o banco
-- [ ]  Testar endpoints com ThunderClient
-- [ ]  Implementar CRUD das páginas de login e cadastro
+- [x]  Testar endpoints com ThunderClient
+- [x]  Implementar CRUD das páginas de login e cadastro
 
 ---
 
 ## 🗓️ JUNHO – Desenvolvimento e Deploy do Back-end
 
-- [ ]  Adicionar autenticação e middleware
-- [ ]  Adicionar validações nos inputs
-- [ ]  Transformar as senhas em criptografadas com bcrypt
-- [ ]  Criar outras entidades e relacionamentos, se preciso
-- [ ]  Finalizar as rotas da API
-- [ ]  Documentar as rotas com Swagger
-- [ ]  Fazer deploy da API com Render
-- [ ]  Escrever textos sobre a história da fotografia e sobre a primeira pessoa fotografada para a página de artigos
+- [x]  Transformar as senhas em criptografadas com bcrypt
+- [x]  Criar outras entidades e relacionamentos, se preciso
+- [x]  Finalizar o máximo de rotas possíveis
+- [ ]  Documentar as rotas com Swagger (as que já estiverem feitas)
+- [x]  Escrever textos sobre a história da fotografia e sobre a primeira pessoa fotografada para a página de artigos
 
 ---
 
 ## 🗓️ JULHO – Front-end e Integração com API
 
-- [ ]  Iniciar desenvolvimento com base no Figma do projeto
+- [x]  Iniciar desenvolvimento com base no Figma do projeto
 - [ ]  Criar rotas, páginas e componentes principais
 - [ ]  Consumir dados da API
+- [ ]  Frontend da página de artigos e fotografia
+- [ ]  Backend da página principal (Home)
 - [ ]  Exibir dados dinamicamente (GET)
 - [ ]  Aplicar estilos e responsividade
+- [ ]  Adicionar autenticação e middleware
+- [ ]  Adicionar validações nos inputs
 
 ---
 
@@ -67,6 +68,7 @@
 - [ ]  Criar vídeo ou GIF demonstrativo (opcional)
 - [ ]  Escrever documentação técnica do código com MarkDown
 - [ ]  Fazer checklist completo do projeto
+- [ ]  Fazer deploy da API com Render
 
 ---
 
