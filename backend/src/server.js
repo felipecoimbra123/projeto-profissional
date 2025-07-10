@@ -3,6 +3,7 @@ const cors = require('cors')
 const connection = require('./lib/db_config')
 const app = express()
 const { encryptPassword, comparePassword } = require('./lib/bcrypt')
+const {z} = require('zod')
 
 app.use(cors())
 app.use(express.json())
@@ -10,7 +11,21 @@ app.use(express.json())
 const port = 3000
 
 app.post('/usuario/cadastro', async (req, res) => {
-    const {nome, email, senha} = req.body
+    const cadastroUsuarioEsquema = z.object ({
+        nome: z.string().max(20),
+        email: z.email(),
+        senha: z.string().min(5).max(20)
+    })
+
+    const validacao = cadastroUsuarioEsquema.safeParse(req.body)
+
+    if(!validacao.success) {
+        console.log(validacao)
+        return res.status(400).json({ success: false, errors: validacao.error.errors })
+    }
+
+    const {nome, email, senha} = validacao.data
+
     try {
         const senhaCriptografada = await encryptPassword(senha)
 
@@ -24,7 +39,19 @@ app.post('/usuario/cadastro', async (req, res) => {
 })
 
 app.post('/usuario/login', (req, res) => {
-    const {nome, senha} = req.body
+    const loginUsuarioEsquema = z.object ({
+        nome: z.string().max(20),
+        senha: z.string().min(5).max(20)
+    })
+
+    const validacao = loginUsuarioEsquema.safeParse(req.body)
+
+    if(!validacao.success) {
+        console.log(validacao)
+        return res.status(400).json({ success: false, errors: validacao.error.errors })
+    }
+
+    const {nome, senha} = validacao.data
 
     const query = 'SELECT * FROM usuario WHERE nome = ?'
     connection.query(query, [nome], async (err, results) => {
