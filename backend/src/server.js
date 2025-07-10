@@ -3,7 +3,6 @@ const cors = require('cors')
 const connection = require('./lib/db_config')
 const app = express()
 const { encryptPassword, comparePassword } = require('./lib/bcrypt')
-const {z} = require('zod')
 
 app.use(cors())
 app.use(express.json())
