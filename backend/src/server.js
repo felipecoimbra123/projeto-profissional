@@ -3,6 +3,7 @@ const cors = require('cors')
 const connection = require('./lib/db_config')
 const app = express()
 const { encryptPassword, comparePassword } = require('./lib/bcrypt')
+const {z} = require('zod')
 
 app.use(cors())
 app.use(express.json())
@@ -11,7 +12,6 @@ const port = 3000
 
 app.post('/usuario/cadastro', async (req, res) => {
     const {nome, email, senha} = req.body
-
     try {
         const senhaCriptografada = await encryptPassword(senha)
 
