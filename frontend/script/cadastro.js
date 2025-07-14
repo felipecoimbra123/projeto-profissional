@@ -20,6 +20,6 @@ formRegister.addEventListener('submit', async (e) => {
         localStorage.setItem('usuario', JSON.stringify({id: result.results.insertId}))
         window.location.href = 'index.html'
     } else {
-        alert('Cadastro não concluído')
+        alert(result.error)
     }
 })
