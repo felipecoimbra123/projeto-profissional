@@ -94,6 +94,7 @@ h2 {
     background-color: #FF6600;
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+    cursor: pointer;
 
     &:hover{
         opacity: 0.5;
@@ -112,6 +113,7 @@ h2 {
     background-color: #FF6600;
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+    cursor: pointer;
 
     &:hover{
         opacity: 0.5;

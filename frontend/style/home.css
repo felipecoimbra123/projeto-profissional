@@ -21,6 +21,7 @@ header{
 ul{
     display: flex;
     justify-content: space-around;
+    align-items: center;
     list-style-type: none;
 }
 
@@ -33,12 +34,21 @@ a{
 
     &:hover {
         color: black;
-        transition: 0.7s;
+        transition: 0.4s;
     }
+}
+
+.profile-icon:hover{
+    filter: invert();
+    cursor: pointer;
+    transition: 0.4s;
 }
 
 hr{
     width: 400px;
+    height: 2px;
+    background-color: black;
+    border: none;
 }
 
 h2{
@@ -57,14 +67,15 @@ h2{
     margin-top: 20px;
 }
 
-
 .div-images img{
     padding: 10px;
-    height: 180px;
+    height: 160px;
 }
 
-.setas-home{
-    max-width: 200px;
-    max-height: 100px;
-    margin: auto;
+.seta-direita-icon:hover{
+    cursor: pointer;
+}
+
+.seta-esquerda-icon:hover{
+    cursor: pointer;
 }

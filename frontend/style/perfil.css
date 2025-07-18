@@ -21,8 +21,8 @@ header{
 ul{
     display: flex;
     justify-content: space-around;
-    list-style-type: none;
     align-items: center;
+    list-style-type: none;
 }
 
 a{
@@ -34,7 +34,7 @@ a{
 
     &:hover {
         color: black;
-        transition: 0.7s;
+        transition: 0.4s;
     }
 }
 
