@@ -6,7 +6,6 @@ create table usuario(
     nome varchar(255) not null,
     email varchar(255) not null unique,
     senha varchar(255) not null,
-    imagemArtigo varchar(255),
     seguidores int,
     imagemPerfil varchar(255),
     criadoEm timestamp default current_timestamp
@@ -25,6 +24,7 @@ create table artigo(
     conteudo varchar(255),
     imagemArtigo varchar(255),
     categoria varchar(255),
+    imagemArtigo varchar(255),
     criadoEm timestamp default current_timestamp,
     autor_id int,
     foreign key (autor_id) references usuario(id)
