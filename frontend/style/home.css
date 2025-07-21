@@ -44,6 +44,25 @@ a{
     transition: 0.4s;
 }
 
+.button-new-photo{
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.button-new-photo button{
+    border: none;
+    background-color: #9966CC;
+    color: white;
+    width: 250px;
+    cursor: pointer;
+    padding: 15px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
 hr{
     width: 400px;
     height: 2px;
@@ -79,3 +98,4 @@ h2{
 .seta-esquerda-icon:hover{
     cursor: pointer;
 }
+
