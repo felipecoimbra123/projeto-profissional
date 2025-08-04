@@ -50,7 +50,7 @@ a{
     padding: 20px;
 }
 
-.button-new-photo button{
+.button-new-photo a{
     border: none;
     background-color: #9966CC;
     color: white;
