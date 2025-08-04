@@ -4,6 +4,7 @@ const connection = require('./lib/db_config')
 const app = express()
 const { encryptPassword, comparePassword } = require('./lib/bcrypt')
 const { z } = require('zod')
+const { signJwt } = require('./lib/token')
 
 app.use(cors())
 app.use(express.json())
@@ -29,8 +30,20 @@ app.post('/usuario/cadastro', async (req, res) => {
         const senhaCriptografada = await encryptPassword(senha)
 
         const query = 'INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)'
+
         connection.query(query, [nome, email, senhaCriptografada], (err, results) => {
-            res.status(201).json({ success: true, results, message: 'Sucesso no cadastro!' })
+            console.log(err)
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Erro no servidor' })
+            }
+
+            const token = signJwt({ id: results.insertId})
+
+            if(!token) {
+                res.status(500).json({ success: false})
+            }
+            res.status(201).json({ success: true, results, message: 'Sucesso no cadastro!', token })
+
         })
     } catch (err) {
         res.status(500).json({ success: false, message: 'Erro ao processar a senha!' })
@@ -68,7 +81,13 @@ app.post('/usuario/login', (req, res) => {
             const senhaCerta = await comparePassword(senha, user.senha)
 
             if (senhaCerta) {
-                res.json({ success: true, message: 'Sucesso no login!', data: user })
+                const token = signJwt({ id: user.id})
+                if(!token) {
+                    res.status(500).json({ success: false})
+                }
+
+                res.json({ success: true, message: 'Sucesso no login!', data: user, token })
+
             } else {
                 res.status(401).json({ success: false, message: 'Usuário ou senha incorretos!' })
             }
