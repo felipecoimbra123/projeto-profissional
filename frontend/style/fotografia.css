@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sigmar&display=swap');
+
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body{
+    background-color: wheat;
+}
+
+header{
+    background-color: #FF6600;
+    padding: 30px;
+    position: sticky;
+    top: 0;
+    width: 100%;
+}
+
+ul{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
+}
+
+a{
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    font-family: "Lato", sans-serif;
+
+    &:hover {
+        color: black;
+        transition: 0.4s;
+    }
+}
+
+.profile-icon:hover{
+    filter: invert();
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+.button-new-photo{
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.button-new-photo a{
+    border: none;
+    background-color: #9966CC;
+    color: white;
+    width: 250px;
+    cursor: pointer;
+    padding: 15px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.section-fotografia{
+    background-color: white;
+    padding: 50px;
+    width: 50%;
+    margin: auto;
+}
+
+.div-fotografia h1{
+    font-family: 'Lato', sans-serif;
+}
+
+.div-fotografia-comentario{
+    margin: 15px;
+    display: flex;
+    gap: 52px;
+    align-items: center;
+}
+
+hr{
+    max-width: 500px;
+    width: 100%;
+    height: 2px;
+    background-color: black;
+    border: none;
+}
+
+.link-post-fotografia{
+    border: none;
+    background-color: #9966CC;
+    color: white;
+    width: 250px;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 15px;
+    border-radius: 10px;
+}
+
+.article-comentario{
+    background-color: #ff660063;
+    margin-top: 20px;
+    max-width: 500px;
+    padding: 10px;
+    border-radius: 20px;
+}
+
+.article-comentario p{
+    font-family: 'Lato', sans-serif;
+}
+
+.article-comentario div{
+    display: flex;
+    margin: 20px;
+    gap: 20px;
+    align-items: center;
+}
+
+.article-comentario div span{
+    border-bottom: 2px solid black;
+    padding-bottom: 7px;
+    font-size: 20px;
+}
+
+.article-comentario .img-perfil-comentario{
+    border-radius: 50%;
+    height: 40px;
+}
+
+.like-comentario{
+    margin-left: auto;
+}
+
+.like-comentario:hover{
+    cursor: pointer;
+    fill: blue;
+    transition: 0.2s;
+}
