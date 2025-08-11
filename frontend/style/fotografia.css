@@ -77,8 +77,23 @@ a{
     font-family: 'Lato', sans-serif;
 }
 
-.div-fotografia img{
+.foto-e-interacoes{
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    gap: 30px;
+}
+
+.foto-e-interacoes img{
+    width: 200px;
     border-radius: 10px;
+}
+
+.div-interacoes-fotografia{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    font-family: 'Lato', sans-serif;
 }
 
 .div-fotografia-comentario{
