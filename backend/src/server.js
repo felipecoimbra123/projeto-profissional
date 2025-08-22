@@ -127,10 +127,10 @@ app.put('/usuario/:id', (req, res) => {
         return res.status(400).json({ success: false, error: validacao.error.issues[0].message })
     }
 
-    const { id } = req.params
+    const id  = req.usuario.id
     const { nome, email, senha } = validacao.data
 
-    const query = 'UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?' 
+    const query = 'UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?'
     connection.query(query, [nome, email, senha, id], (err) => {
         if(err) {
             return res.status(500).json({ success: false, err, message: 'Erro ao editar usuário!' })
