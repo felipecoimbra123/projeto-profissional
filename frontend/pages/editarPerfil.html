@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edição de Perfil</title>
+    <link rel="stylesheet" href="/frontend/style/edicao-perfil.css">
+</head>
+<body>
+    <main class="main-form">
+            <h1>Editar Perfil</h1>
+        <form class="form-edicao-perfil">
+            <div class="form-div">
+                <label for="nome">Nome:</label>
+                <input type="text" id="nome" placeholder="Digite o novo nome de usuário..." required>
+            </div>
+            <div class="form-div">
+                <label for="email">E-mail:</label>
+                <input type="text" id="email" placeholder="Digite o novo email do usuário..." required>
+            </div>
+            <div class="form-div">
+                <label for="email">Senha:</label>
+                <input type="password" id="senha" placeholder="Digite a nova senha do usuário..." required>
+            </div>
+            <div class="div-button-edicao-perfil">
+                <button class="button-editar-perfil" type="submit">Editar</button>
+            </div>
+        </form>
+    </main>
+    <script src="/frontend/script/perfil.js"></script>
+</body>
+</html>

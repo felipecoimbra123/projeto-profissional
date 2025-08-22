@@ -18,7 +18,7 @@ formRegister.addEventListener('submit', async (e) => {
     if (result.success) {
         alert('Cadastro bem-sucedido!');
         localStorage.setItem('usuario', result.token)
-        window.location.href = 'index.html'
+        window.location.href = 'login.html'
     } else {
         alert(result.error)
     }

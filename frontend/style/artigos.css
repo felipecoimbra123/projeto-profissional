@@ -32,7 +32,7 @@ a{
     color: white;
     font-size: 25px;
     font-family: "Lato", sans-serif;
-
+    
     &:hover {
         color: black;
         transition: 0.7s;
@@ -43,6 +43,25 @@ a{
     filter: invert();
     cursor: pointer;
     transition: 0.4s;
+}
+
+.button-new-photo{
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+}
+
+.button-new-photo a{
+    border: none;
+    background-color: #9966CC;
+    color: white;
+    width: 250px;
+    cursor: pointer;
+    padding: 15px;
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+    border-radius: 10px;
 }
 
 .artigos-fotografia{

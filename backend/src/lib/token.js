@@ -6,7 +6,6 @@ const signJwt = (payload) => {
 
     try {
         return jwt.sign(payload, secret, { expiresIn: '1d' } ) // expiresIn quer dizer que o token vai durar um dia, dps fica inválido(quer dizer que ele vai ficar 1 dia logado)
-
     }
     catch (err) {
         console.error('O login do JWT falhou!', error)
@@ -17,11 +16,13 @@ const signJwt = (payload) => {
 //Ver se o token ta certo
 
 const verifyJwt = (token) => {
+    const secret = process.env.JWT_SECRET || "teste"
+    
     try {
         return jwt.verify(token, secret)
     }
     catch (err) {
-        console.error('Verificação do JWT falhou!', error)
+        console.error('Verificação do JWT falhou!', err)
         return null
     }
 }
