@@ -17,7 +17,8 @@ const port = 3000
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, '..', 'assets')
+        const assets_dir = path.join(__dirname, '..', '..', 'assets')
+        cb(null, assets_dir)
     },
     filename: function (req, file, cb) {
         const uniqueName = Date.now() + path.extname(file.originalname)
@@ -27,8 +28,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-app.post('/fotos/postagem', upload.single('url'), (req, res) => {
-    const { descricao, autor_id } = req.body
+app.post('/fotos/postagem', autenticarToken, upload.single('url'), (req, res) => {
+    const autor_id = req.usuario.id
+    const { descricao } = req.body
     const imagePath = req.file ? `/assets/${req.file.filename}` : null //verificar
 
     const query = 'INSERT INTO fotografia (descricao, url, autor_id) VALUES (?, ?, ?)'

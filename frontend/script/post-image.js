@@ -3,19 +3,19 @@ const formPost = document.querySelector('.form-post-fotografia')
 formPost.addEventListener('submit', async (e) => {
     e.preventDefault()
 
-    const usuarioId = localStorage.getItem('usuario')
-    if (!usuarioId) {
+    const token = localStorage.getItem('usuario')
+    if (!token) {
         alert('Você precisa estar logado para postar')
         return
     }
 
     const formData = new FormData(formPost)
-    formData.append('autor_id', usuarioId)
 
     try {
         const res = await fetch('http://localhost:3000/fotos/postagem', {
             method: 'POST',
-            body: formData
+            body: formData,
+            headers: { 'Authorization': `Bearer ${token}` }
         })
 
         const data = await res.json()
