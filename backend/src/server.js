@@ -2,15 +2,45 @@ const express = require('express')
 const cors = require('cors')
 const connection = require('./lib/db_config')
 const app = express()
+const multer = require('multer')
 const { encryptPassword, comparePassword } = require('./lib/bcrypt')
 const { z } = require('zod')
 const { signJwt } = require('./lib/token')
 const { autenticarToken } = require('./middlewares/autenticacaoMiddleware')
+const path = require('path')
 
 app.use(cors())
 app.use(express.json())
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')))
 
 const port = 3000
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, '..', 'assets')
+    },
+    filename: function (req, file, cb) {
+        const uniqueName = Date.now() + path.extname(file.originalname)
+        cb(null, uniqueName)
+    }
+})
+
+const upload = multer({ storage: storage })
+
+app.post('/fotos/postagem', upload.single('url'), (req, res) => {
+    const { descricao, autor_id } = req.body
+    const imagePath = req.file ? `/assets/${req.file.filename}` : null //verificar
+
+    const query = 'INSERT INTO fotografia (descricao, url, autor_id) VALUES (?, ?, ?)'
+
+    connection.query(query, [descricao, imagePath, autor_id], (err, result) => {
+        if (err) {
+            console.log('Erro ao salvar o post', err)
+            return res.status(500).json({ success: false, message: 'Erro ao criar post' })
+        }
+        res.json({ success: true, message: 'Post criado com sucesso', id: result.insertId })
+    })
+})
 
 app.post('/usuario/cadastro', async (req, res) => {
     const cadastroUsuarioEsquema = z.object({
