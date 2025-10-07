@@ -24,7 +24,6 @@ create table artigo(
     conteudo varchar(255),
     imagemArtigo varchar(255),
     categoria varchar(255),
-    imagemArtigo varchar(255),
     criadoEm timestamp default current_timestamp,
     autor_id int,
     foreign key (autor_id) references usuario(id)
@@ -32,15 +31,13 @@ create table artigo(
 
 create table fotografia(
 	id int primary key auto_increment,
-    titulo varchar(255) not null,
+    titulo varchar(255),
     descricao varchar(255) not null,
     url varchar(255) not null,
-    media_avaliacao float not null,
+    media_avaliacao float,
     curtidas int,
     autor_id int,
-    comentario int,
-    foreign key (autor_id) references usuario(id),
-    foreign key (comentario) references comentario(id)
+    foreign key (autor_id) references usuario(id)
 );
 
 create table comentario(
@@ -54,3 +51,7 @@ create table comentario(
 );
 
 select * from usuario;
+
+select * from fotografia;
+
+drop database fotografia_pp;
