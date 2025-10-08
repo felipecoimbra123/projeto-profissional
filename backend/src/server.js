@@ -11,7 +11,7 @@ const path = require('path')
 
 app.use(cors())
 app.use(express.json())
-app.use('/assets', express.static(path.join(__dirname, '..', 'assets')))
+app.use('/assets', express.static(path.join(__dirname, '..', '..', 'assets'))) //deixa a imagem publica
 
 const port = 3000
 
@@ -131,20 +131,36 @@ app.post('/usuario/login', (req, res) => {
 })
 
 app.get("/me", autenticarToken, async (req, res) => {
-  try {
-    // Usando promise() para poder await
-    const [results] = await connection.promise().query(
-      "SELECT * FROM usuario WHERE id = ?",
-      [req.usuario.id]
-    );
+    try {
+        const [results] = await connection.promise().query(
+            "SELECT id, nome, email, imagemPerfil FROM usuario WHERE id = ?",
+            [req.usuario.id]
+        );
 
-    // Retorna sucesso com os dados
-    return res.json({ message: "Sucesso", success: true, data: results });
-  } catch (err) {
-    // Retorna erro caso algo dê errado
-    return res.status(500).json({ message: "Erro", success: false, error: err.message });
-  }
+        if (results.length === 0) {
+            return res.status(404).json({ message: "Usuário não encontrado", success: false });
+        }
+
+        return res.json({ message: "Sucesso", success: true, data: results[0] });
+    } catch (err) {
+        return res.status(500).json({ message: "Erro", success: false, error: err.message });
+    }
 });
+
+app.get("/fotos/minhas", autenticarToken, async (req, res) => { 
+    try {
+        const autor_id = req.usuario.id
+
+        const query = 'SELECT url, descricao, id FROM fotografia WHERE autor_id = ? ORDER BY id DESC'
+
+        const [results] = await connection.promise().query(query, [autor_id])
+
+        return res.json({ success: true, message: 'fotos do usuário listadas com sucesso', data: results })
+    } catch (err) {
+        console.log('Erro ao buscar fotos do usuário', err)
+        return res.status(500).json({ success: false, message: 'erro ao buscar fotos do usuário', error: err.message })
+    }
+})
 
 app.put("/usuario", autenticarToken, (req, res) => {
     const cadastroUsuarioEsquema = z.object({
