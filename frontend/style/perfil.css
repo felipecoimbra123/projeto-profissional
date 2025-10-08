@@ -124,11 +124,11 @@ hr{
 }
   
 .foto-item {
-  position: relative;
+  position: relative; 
   width: 100%;
   aspect-ratio: 1 / 1;
   object-fit: cover;
-border: 1px solid black;
+  border: 1px solid black;
   border-radius: 5px;
   overflow: hidden;
 }
