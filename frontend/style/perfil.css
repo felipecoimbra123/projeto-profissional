@@ -127,7 +127,8 @@ hr{
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border: 1px solid black;
+  object-fit: cover;
+border: 1px solid black;
   border-radius: 5px;
   overflow: hidden;
 }
