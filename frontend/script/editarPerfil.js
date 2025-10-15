@@ -53,7 +53,7 @@ if (formEditar) {
             const response = await fetch('http://localhost:3000/usuario/',
                 {
                     method: "PUT",
-                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}`},
+                    headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
                     body: JSON.stringify({ nome, email, senha }),
                 }
             );
@@ -72,3 +72,30 @@ if (formEditar) {
         }
     })
 }
+
+const deleteButton = document.querySelector(".button-excluir-perfil");
+
+deleteButton.addEventListener("click", async (e) => {
+    const vaiDeletar = confirm("Você tem certeza que deseja deletar o usuário?");
+
+    if (!vaiDeletar) {
+        return;
+    }
+
+    const response = await fetch('http://localhost:3000/usuario/',
+        {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json", "Authorization": `Bearer ${token}` },
+        }
+    );
+
+    const result = await response.json();
+    console.log(result)
+
+    if (response.ok) {
+        alert("Usuário excluído com sucesso!");
+        window.location.href = "register.html";
+    } else {
+        alert("Erro ao excluir usuário: " + (result.error || result.message || "Erro desconhecido."));
+    }
+})

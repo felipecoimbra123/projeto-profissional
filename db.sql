@@ -14,8 +14,8 @@ create table usuario(
 create table seguir(
 	seguidor int,
     seguindo int,
-    foreign key (seguidor) references usuario(id),
-    foreign key (seguindo) references usuario(id)
+    foreign key (seguidor) references usuario(id) ON DELETE CASCADE,
+    foreign key (seguindo) references usuario(id) ON DELETE CASCADE
 );
 
 create table artigo(
@@ -26,7 +26,7 @@ create table artigo(
     categoria varchar(255),
     criadoEm timestamp default current_timestamp,
     autor_id int,
-    foreign key (autor_id) references usuario(id)
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE
 );
 
 create table fotografia(
@@ -37,7 +37,7 @@ create table fotografia(
     media_avaliacao float,
     curtidas int,
     autor_id int,
-    foreign key (autor_id) references usuario(id)
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE
 );
 
 create table comentario(
@@ -45,8 +45,8 @@ create table comentario(
     texto varchar(255) not null,
     fotografia int,
     autor_id int,
-    foreign key (fotografia) references fotografia(id),
-    foreign key (autor_id) references usuario(id),
+    foreign key (fotografia) references fotografia(id) ON DELETE CASCADE,
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE,
     criadoEm timestamp default current_timestamp
 );
 

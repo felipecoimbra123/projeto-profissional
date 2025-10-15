@@ -190,6 +190,20 @@ app.put("/usuario", autenticarToken, (req, res) => {
     });
 });
 
+app.delete("/usuario", autenticarToken, (req, res) => {
+    const id = req.usuario.id;
+    const query = "DELETE FROM usuario WHERE id = ?";
+
+    connection.query(query, [id], (err, result) => {
+        if (err) {
+            return res.status(500).json({success: false, err, message: "Erro ao excluir usuário!",});
+        }
+
+        res.json({success: true, message: "Usuário excluído com sucesso!", data: result,
+        });
+    });
+})
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })
