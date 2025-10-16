@@ -8,7 +8,7 @@
 }
 
 body {
-    background: linear-gradient(#fe6a0091, #9966ccc1) no-repeat;
+    background: linear-gradient(#ff7f23c3, #fe6a0050) no-repeat;
     background-size: cover;
     min-height: 100vh;
     min-height: 100svh;
@@ -22,10 +22,9 @@ body {
 }
 
 .form-post-fotografia {
-    border: 2px solid black;
     border-radius: 10px;
-    padding: 10px;
-    background: rgba(255, 255, 255, 0.10);
+    padding: 20px;
+    background-color: rgb(251, 251, 251);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
 }
@@ -45,7 +44,7 @@ h2 {
     text-align: center;
     font-size: 35px;
     margin: 40px;
-    color: white;
+    letter-spacing: 2px;
 }
 
 .form-div {
@@ -62,7 +61,6 @@ h2 {
 }
 
 .form-div input {
-    border: none;
     font-size: 15px;
     outline: none;
     padding: 15px;
@@ -101,7 +99,7 @@ input[type='file'] {
 .label-arquivo {
     display: inline-block;
     padding: 12px 24px;
-    background-color: #f5f5f5;
+    background-color: white;
     font-weight: bold;
     border-radius: 8px;
     cursor: pointer;
@@ -109,6 +107,7 @@ input[type='file'] {
     text-align: center;
     font-family: "Lexend", sans-serif;
     font-size: 1rem;
+    border: 1px solid rgb(146, 145, 145);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     user-select: none;
 }
