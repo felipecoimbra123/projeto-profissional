@@ -85,8 +85,11 @@ a{
 }
 
 .foto-e-interacoes img{
-    width: 200px;
+    max-width: 200px;
+    max-height: 800px;
+    width: 100%;
     border-radius: 10px;
+    border: 1px solid black;
 }
 
 .div-interacoes-fotografia{

@@ -77,7 +77,7 @@ async function buscarMinhasFotos() {
         const container = document.createElement('div');
         container.classList.add('foto-item');
 
-        container.innerHTML = `<img src="http://localhost:3000${foto.url}" alt="${foto.descricao || 'Foto'}">`;
+        container.innerHTML = `<a href="fotografia.html?id=${foto.id}"><img src="http://localhost:3000${foto.url}" alt="${foto.descricao || 'Foto'}"></a>`;
 
         fotosPerfilSection.appendChild(container);
       });

@@ -162,6 +162,28 @@ app.get("/fotos/minhas", autenticarToken, async (req, res) => {
     }
 })
 
+// --- Adicionar/Substituir no seu arquivo principal do Express ---
+
+app.get("/fotos/:id", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+
+        const query = ` SELECT f.id, f.titulo, f.descricao, f.url, f.curtidas, f.media_avaliacao, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil, (SELECT COUNT(*) FROM comentario c WHERE c.fotografia = f.id) AS totalComentarios, 0 AS totalSalvos  FROM fotografia f JOIN usuario u ON f.autor_id = u.id WHERE f.id = ?; `;
+
+        const [results] = await connection.promise().query(query, [id]);
+
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Foto não encontrada' });
+        }
+
+        return res.json({ success: true, message: 'Foto listada com sucesso', data: results[0] });
+    } catch (err) {
+        console.log('Erro ao buscar a foto', err);
+        return res.status(500).json({ success: false, message: 'Erro ao buscar a foto', error: err.message });
+    }
+});
+
 app.put("/usuario", autenticarToken, (req, res) => {
     const cadastroUsuarioEsquema = z.object({
         nome: z.string().max(20, { message: "O nome deve ter no máximo 20 caracteres" }),
@@ -203,6 +225,23 @@ app.delete("/usuario", autenticarToken, (req, res) => {
         });
     });
 })
+
+// --- Adicionar no seu arquivo principal do Express ---
+
+app.get("/fotos/:id/comentarios", async (req, res) => {
+    try {
+        const { id } = req.params;
+
+        const query = ` SELECT c.texto, c.criadoEm, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil FROM comentario c JOIN usuario u ON c.autor_id = u.id WHERE c.fotografia = ? ORDER BY c.criadoEm DESC;`;
+
+        const [results] = await connection.promise().query(query, [id]);
+
+        return res.json({ success: true, message: 'Comentários listados com sucesso', data: results });
+    } catch (err) {
+        console.log('Erro ao buscar comentários', err);
+        return res.status(500).json({ success: false, message: 'Erro ao buscar comentários', error: err.message });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
