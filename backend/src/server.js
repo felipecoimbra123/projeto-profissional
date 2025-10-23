@@ -162,8 +162,6 @@ app.get("/fotos/minhas", autenticarToken, async (req, res) => {
     }
 })
 
-// --- Adicionar/Substituir no seu arquivo principal do Express ---
-
 app.get("/fotos/:id", async (req, res) => {
     try {
         const { id } = req.params;
@@ -225,8 +223,6 @@ app.delete("/usuario", autenticarToken, (req, res) => {
         });
     });
 })
-
-// --- Adicionar no seu arquivo principal do Express ---
 
 app.get("/fotos/:id/comentarios", async (req, res) => {
     try {

@@ -105,7 +105,7 @@ async function buscarFotoUnica(fotoId) {
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const fotoId = urlParams.get("id"); //espera que a url vai ser: fotografia.html?id=X
+    const fotoId = urlParams.get("id"); // espera que a url vai ser: fotografia.html?id=X
 
     if (fotoId) {
         buscarFotoUnica(fotoId);
