@@ -224,6 +224,33 @@ app.delete("/usuario", autenticarToken, (req, res) => {
     });
 })
 
+app.post("/fotos/:id/comentar", autenticarToken, async (req, res) => {
+    const comentarioEsquema = z.object({
+        texto: z.string().max(255, { message: 'O comentário deve ter no máximo 255 caracteres' }).min(1, { message: 'O comentário não pode ser vazio' })
+    });
+
+    const validacao = comentarioEsquema.safeParse(req.body);
+
+    if (!validacao.success) {
+        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    try {
+        const fotografia_id = req.params.id;
+        const autor_id = req.usuario.id;
+        const { texto } = validacao.data;
+
+        const query = 'INSERT INTO comentario (texto, fotografia, autor_id) VALUES (?, ?, ?)';
+
+        const [result] = await connection.promise().query(query, [texto, fotografia_id, autor_id]);
+
+        return res.status(201).json({ success: true, message: 'Comentário adicionado com sucesso', id: result.insertId });
+    } catch (err) {
+        console.error('Erro ao postar comentário:', err);
+        return res.status(500).json({ success: false, message: 'Erro interno ao adicionar comentário', error: err.message });
+    }
+});
+
 app.get("/fotos/:id/comentarios", async (req, res) => {
     try {
         const { id } = req.params;

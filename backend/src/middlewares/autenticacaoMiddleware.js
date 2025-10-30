@@ -1,22 +1,26 @@
-const jwt = require('jsonwebtoken')
-const { verifyJwt } = require('../lib/token')
+const { verifyJwt } = require('../lib/token');
 
-function autenticarToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(" ")[1];
+const autenticarToken = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
 
-  if (!token) return res.status(401).json({ erro: "Token não enviado" });
+    if (!authHeader) {
+        return res.status(401).json({ success: false, message: 'Token não fornecido' });
+    }
 
-  const verifiedToken = verifyJwt(token);
+    const token = authHeader.split(' ')[1]; // "Bearer <token>"
 
-  if (!verifiedToken) {
-      return res.status(403).json({ erro: "Token inválido" });
-  }
+    if (!token) {
+        return res.status(401).json({ success: false, message: 'Token mal formatado' });
+    }
 
-    req.usuario = verifiedToken; 
-    next();
-}
+    const decoded = verifyJwt(token);
 
-module.exports = {
-    autenticarToken
-}
+    if (!decoded) {
+        return res.status(403).json({ success: false, message: 'Token inválido ou expirado' });
+    }
+
+    req.usuario = decoded; // coloca info do usuário na requisição
+    next();
+};
+
+module.exports = { autenticarToken };

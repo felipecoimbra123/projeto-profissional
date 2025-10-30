@@ -193,3 +193,7 @@ hr{
 .avaliacao-estrela label:hover ~ label {
   color: gold;
 }
+
+svg{
+    cursor: pointer;
+}
