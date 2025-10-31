@@ -103,6 +103,53 @@ async function buscarFotoUnica(fotoId) {
     }
 }
 
+const btnLike = document.getElementById("btn-like");
+const btnFavorite = document.getElementById("btn-favorite");
+
+async function toggleLike(fotoId) {
+    const token = localStorage.getItem('usuario')
+    
+    try {
+        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}/like`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const data = await resposta.json();
+        if (data.success) {
+            buscarFotoUnica(fotoId); // Atualiza contadores
+        }
+    } catch (err) {
+        console.log("Erro ao curtir:", err);
+    }
+}
+
+async function toggleFavorite(fotoId) {
+    const token = localStorage.getItem('usuario')
+
+    try {
+        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}/favorite`, {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${token}` }
+        });
+
+        const data = await resposta.json();
+        if (data.success) {
+            buscarFotoUnica(fotoId); // Atualiza contadores
+        }
+    } catch (err) {
+        console.log("Erro ao favoritar:", err);
+    }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const fotoId = urlParams.get("id");
+
+    if (btnLike) btnLike.addEventListener("click", () => toggleLike(fotoId));
+    if (btnFavorite) btnFavorite.addEventListener("click", () => toggleFavorite(fotoId));
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const fotoId = urlParams.get("id"); // espera que a url vai ser: fotografia.html?id=X

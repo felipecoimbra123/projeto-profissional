@@ -266,6 +266,55 @@ app.get("/fotos/:id/comentarios", async (req, res) => {
     }
 });
 
+app.post("/fotos/:postId/like", autenticarToken, async (req, res) => {
+    const { postId } = req.params;
+    const userId = req.usuario.id;
+  
+    try {
+      const [existingLike] = await connection.promise().query(
+        'SELECT id FROM likes WHERE post_id = ? AND user_id = ?',
+        [postId, userId]
+      );
+  
+      if (existingLike.length > 0) {
+        await connection.promise().query('DELETE FROM likes WHERE id = ?', [existingLike[0].id]);
+        return res.json({ success: true, liked: false });
+      } else {
+        await connection.promise().query('INSERT INTO likes (post_id, user_id) VALUES (?, ?)', [postId, userId]);
+        return res.json({ success: true, liked: true });
+      }
+  
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Erro ao curtir/descurtir." });
+    }
+  });
+  
+  app.post("/fotos/:postId/favorite", autenticarToken, async (req, res) => {
+    const { postId } = req.params;
+    const userId = req.usuario.id;
+  
+    try {
+      const [existingFav] = await connection.promise().query(
+        'SELECT id FROM favorites WHERE post_id = ? AND user_id = ?',
+        [postId, userId]
+      );
+  
+      if (existingFav.length > 0) {
+        await connection.promise().query('DELETE FROM favorites WHERE id = ?', [existingFav[0].id]);
+        return res.json({ success: true, favorited: false });
+      } else {
+        await connection.promise().query('INSERT INTO favorites (post_id, user_id) VALUES (?, ?)', [postId, userId]);
+        return res.json({ success: true, favorited: true });
+      }
+  
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({ success: false, message: "Erro ao favoritar/desfavoritar." });
+    }
+  });
+  
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })
