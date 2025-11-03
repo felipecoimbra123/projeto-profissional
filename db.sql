@@ -50,6 +50,22 @@ create table comentario(
     criadoEm timestamp default current_timestamp
 );
 
+create table likes(
+	id int primary key auto_increment,
+    post_id int not null,
+    user_id int not null,
+    foreign key (post_id) references fotografia(id) ON DELETE CASCADE,
+    foreign key (user_id) references usuario(id) ON DELETE CASCADE
+);
+
+create table favorites(
+	id int primary key auto_increment,
+	post_id int not null,
+	user_id int not null,
+	foreign key (post_id) references fotografia(id) ON DELETE CASCADE,
+	foreign key (user_id) references usuario(id) ON DELETE CASCADE
+)
+
 select * from usuario;
 
 select * from fotografia;

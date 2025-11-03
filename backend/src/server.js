@@ -313,7 +313,41 @@ app.post("/fotos/:postId/like", autenticarToken, async (req, res) => {
       res.status(500).json({ success: false, message: "Erro ao favoritar/desfavoritar." });
     }
   });
+
   
+  app.get("/fotos", async (req, res) => {
+    try {
+        // Consulta SQL para buscar a ID, URL e descrição da foto, e o nome do autor
+        const query = `
+            SELECT 
+                f.id, 
+                f.url, 
+                f.descricao, 
+                u.nome AS autorNome 
+            FROM 
+                fotografia f 
+            JOIN 
+                usuario u ON f.autor_id = u.id 
+            ORDER BY 
+                f.id DESC; 
+        `;
+
+        const [results] = await connection.promise().query(query);
+
+        return res.json({ 
+            success: true, 
+            message: 'Fotos listadas com sucesso', 
+            data: results 
+        });
+    } catch (err) {
+        console.error('Erro ao buscar todas as fotos:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar as fotos', 
+            error: err.message 
+        });
+    }
+});
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)

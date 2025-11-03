@@ -4,7 +4,7 @@ const imagemElement = document.querySelector(".foto-e-interacoes img");
 const likesElement = document.getElementById("likes-count");
 const savesElement = document.getElementById("saves-count");
 const avaliacaoElement = document.getElementById("avaliacao-rating");
-const comentariosContainer = document.querySelector(".section-fotografia");
+const comentariosContainer = document.querySelector(".section-comentario");
 
 const linkPostComentario = document.querySelector('.link-post-fotografia');
 
@@ -21,6 +21,7 @@ async function buscarComentarios(fotoId) {
         const data = await resposta.json();
         
         if (data.success && comentariosContainer) {
+            comentariosContainer.innerHTML = "";
             
             data.data.forEach(comentario => {
                 const article = document.createElement('article');
