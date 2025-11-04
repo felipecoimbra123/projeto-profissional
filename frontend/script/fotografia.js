@@ -1,7 +1,7 @@
 const autorNomeElement = document.getElementById("autor-nome-h1"); 
 const imagemElement = document.querySelector(".foto-e-interacoes img");
 
-const likesElement = document.getElementById("likes-count");
+const likesElement = document.getElementById("like-count");
 const savesElement = document.getElementById("saves-count");
 const avaliacaoElement = document.getElementById("avaliacao-rating");
 const comentariosContainer = document.querySelector(".section-comentario");
@@ -55,23 +55,46 @@ async function buscarComentarios(fotoId) {
     }
 }
 
+// ... (código anterior)
+
 async function buscarFotoUnica(fotoId) {
     if (!fotoId) {
         window.location.href = 'index.html'; 
         return;
     }
+    
+    // Obtém o token do localStorage
+    const token = localStorage.getItem('usuario'); 
+
     if(linkPostComentario) {
         linkPostComentario.href = `post-comentario.html?fotoid=${fotoId}`;
     }
+    
     try {
-        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}`);
-        // ... (Verificação de resposta.ok, etc.) ...
+        const headers = {
+            'Content-Type': 'application/json'
+        };
+        
+        // Adiciona o token ao header se ele existir
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+        
+        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}`, {
+            headers: headers // Envia os headers com ou sem o token
+        });
+        
+        if (!resposta.ok) {
+            throw new Error(`Erro ao buscar a foto: ${resposta.statusText}`);
+        }
         
         const data = await resposta.json();
-
+        
         if (data.success) {
             const foto = data.data;
 
+            // ... (Atualizações de autorNomeElement e imagemElement) ...
+            
             if (autorNomeElement) {
                 autorNomeElement.textContent = foto.autorNome;
             }
@@ -80,17 +103,20 @@ async function buscarFotoUnica(fotoId) {
                 imagemElement.alt = foto.descricao || 'Foto';
             }
             
-            // ATUALIZAÇÃO: Exibe a contagem
+            // ATUALIZAÇÃO CRUCIAL: Exibe a contagem
             if (likesElement) {
-                likesElement.textContent = foto.curtidas || 0; 
+                // Seu backend já retorna curtidas, mas se for nulo, use 0
+                likesElement.textContent = foto.curtidas !== undefined ? foto.curtidas : 0; 
             }
             if (savesElement) {
-                savesElement.textContent = foto.totalSalvos || 0; 
+                // Seu backend já retorna totalSalvos, mas se for nulo, use 0
+                savesElement.textContent = foto.totalSalvos !== undefined ? foto.totalSalvos : 0; 
             }
             
-            // ATUALIZAÇÃO: Adiciona/Remove a classe 'active'
+            // ATUALIZAÇÃO CRUCIAL: Adiciona/Remove a classe 'active' com base na resposta da API
             if (btnLike) {
-                if (foto.curtidoPeloUsuario) { // Assume que este campo vem da API
+                // Use o novo campo retornado pelo backend
+                if (foto.curtidoPeloUsuario === 1) { // 1 = true
                     btnLike.classList.add('active');
                 } else {
                     btnLike.classList.remove('active');
@@ -98,7 +124,8 @@ async function buscarFotoUnica(fotoId) {
             }
             
             if (btnFavorite) {
-                if (foto.salvoPeloUsuario) { // Assume que este campo vem da API
+                // Use o novo campo retornado pelo backend
+                if (foto.salvoPeloUsuario === 1) { // 1 = true
                     btnFavorite.classList.add('active');
                 } else {
                     btnFavorite.classList.remove('active');
@@ -106,12 +133,12 @@ async function buscarFotoUnica(fotoId) {
             }
             
             if (avaliacaoElement) {
-                 // ... (Restante do código de avaliação)
+                // ... (Restante do código de avaliação)
             }
             
             await buscarComentarios(fotoId);
         } else {
-            alert("Erro ao carregar a foto");
+            alert("Erro ao carregar a foto: " + data.message);
         }
     } catch (err) {
         console.error("Erro ao carregar a foto:", err.message);

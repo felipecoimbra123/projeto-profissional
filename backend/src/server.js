@@ -162,23 +162,80 @@ app.get("/fotos/minhas", autenticarToken, async (req, res) => {
     }
 })
 
+// Adicione a função de decodificar token, ou importe
+// const jwt = require('jsonwebtoken'); // Exemplo
+// const SECRET = 'seu_segredo'; // Exemplo
+
+// ... (código anterior do backend) ...
+
+// **NOTA:** Você deve ter 'jsonwebtoken' importado e 'SECRET' definido
+// const jwt = require('jsonwebtoken');
+// const SECRET = 'sua_chave_secreta_aqui';
+
 app.get("/fotos/:id", async (req, res) => {
+    // 1. Tenta obter o token e decodificar o ID do usuário
+    let loggedUserId = 0; // Padrão: 0 (para consultas de like/save)
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1]; // Assume 'Bearer <token>'
+
+    if (token) {
+        try {
+            // **DECODIFICA O TOKEN AQUI**
+            const decoded = jwt.verify(token, SECRET); // Use sua chave secreta real
+            loggedUserId = decoded.id; 
+        } catch (error) {
+            // Token inválido, continua como não logado (loggedUserId = 0)
+            console.warn("Token de autenticação fornecido é inválido ou expirou.", error.message);
+        }
+    }
+    
     try {
         const { id } = req.params;
+        
+        // A lógica de consulta permanece a mesma, mas agora usa o 'loggedUserId'
+        const query = ` 
+            SELECT 
+                f.id, 
+                f.titulo, 
+                f.descricao, 
+                f.url, 
+                COALESCE(SUM(CASE WHEN l.post_id IS NOT NULL THEN 1 ELSE 0 END), 0) AS curtidas, 
+                f.media_avaliacao, 
+                u.nome AS autorNome, 
+                u.imagemPerfil AS autorImagemPerfil, 
+                (SELECT COUNT(*) FROM comentario c WHERE c.fotografia = f.id) AS totalComentarios, 
+                COALESCE(SUM(CASE WHEN fav.post_id IS NOT NULL THEN 1 ELSE 0 END), 0) AS totalSalvos, 
+                MAX(CASE WHEN l_user.user_id = ? THEN 1 ELSE 0 END) AS curtidoPeloUsuario,
+                MAX(CASE WHEN fav_user.user_id = ? THEN 1 ELSE 0 END) AS salvoPeloUsuario
+            FROM 
+                fotografia f 
+            JOIN 
+                usuario u ON f.autor_id = u.id 
+            LEFT JOIN
+                likes l ON f.id = l.post_id
+            LEFT JOIN
+                favorites fav ON f.id = fav.post_id
+            LEFT JOIN 
+                likes l_user ON f.id = l_user.post_id AND l_user.user_id = ?
+            LEFT JOIN 
+                favorites fav_user ON f.id = fav_user.post_id AND fav_user.user_id = ?
+            WHERE 
+                f.id = ?
+            GROUP BY
+                f.id, f.titulo, f.descricao, f.url, f.media_avaliacao, u.nome, u.imagemPerfil;
+        `;
 
-
-        const query = ` SELECT f.id, f.titulo, f.descricao, f.url, f.curtidas, f.media_avaliacao, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil, (SELECT COUNT(*) FROM comentario c WHERE c.fotografia = f.id) AS totalComentarios, 0 AS totalSalvos  FROM fotografia f JOIN usuario u ON f.autor_id = u.id WHERE f.id = ?; `;
-
-        const [results] = await connection.promise().query(query, [id]);
-
+        // Os parâmetros da query agora usam a variável 'loggedUserId'
+        const [results] = await connection.promise().query(query, [loggedUserId, loggedUserId, loggedUserId, loggedUserId, id]);
+        
         if (results.length === 0) {
-            return res.status(404).json({ success: false, message: 'Foto não encontrada' });
+            return res.status(404).json({ success: false, message: 'Foto não encontrada.' });
         }
 
-        return res.json({ success: true, message: 'Foto listada com sucesso', data: results[0] });
+        return res.json({ success: true, data: results[0] });
     } catch (err) {
-        console.log('Erro ao buscar a foto', err);
-        return res.status(500).json({ success: false, message: 'Erro ao buscar a foto', error: err.message });
+        console.error("Erro ao buscar a foto:", err);
+        return res.status(500).json({ success: false, message: 'Erro interno ao buscar a foto', error: err.message });
     }
 });
 
