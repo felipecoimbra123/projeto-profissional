@@ -197,3 +197,44 @@ hr{
 svg{
     cursor: pointer;
 }
+
+/* Novos estilos para os botões de interação (Likes e Salvos) */
+.interaction-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 15px;
+    border: 1px solid #ccc; /* Borda leve para delimitar a área de clique */
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #f9f9f9; /* Fundo claro */
+    transition: background-color 0.2s, border-color 0.2s;
+    width: fit-content; /* Ajusta a largura ao conteúdo */
+}
+
+.interaction-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* Cor padrão do ícone (cinza, por exemplo) */
+.interaction-button svg {
+    fill: #555;
+    transition: fill 0.2s;
+}
+
+/* Estilo para o ícone SALVOS quando ativo */
+#btn-favorite.active svg {
+    fill: #007bff; /* Azul, cor de destaque para salvo */
+}
+
+/* Estilo para o ícone LIKES quando ativo */
+#btn-like.active svg {
+    fill: #FF6600; /* Laranja, cor de destaque para like */
+}
+
+/* Estilo para a contagem */
+.interaction-button span {
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+}
