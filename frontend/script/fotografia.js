@@ -6,7 +6,7 @@ const savesElement = document.getElementById("saves-count");
 const avaliacaoElement = document.getElementById("avaliacao-rating");
 const comentariosContainer = document.querySelector(".section-comentario");
 
-const btnLike = document.getElementById('btn-like');
+const btnLike = document.getElementById('like-btn');
 const btnFavorite = document.getElementById('btn-favorite')
 
 const linkPostComentario = document.querySelector('.link-post-fotografia');
@@ -119,38 +119,78 @@ async function buscarFotoUnica(fotoId) {
 }
 
 async function toggleLike(fotoId) {
-    const token = localStorage.getItem('usuario')
-    
-    try {
-        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}/like`, {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${token}` }
-        });
+    const token = localStorage.getItem('usuario'); // O token JWT completo
+    if (!token) {
+        alert('Você precisa estar logado para curtir uma foto.');
+        return;
+    }
 
-        const data = await resposta.json();
-        if (data.success) {
-            buscarFotoUnica(fotoId); // Atualiza contadores
+    try {
+        const response = await fetch(`http://localhost:3000/fotos/${fotoId}/like`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            }
+        });
+        
+        if (!response.ok) {
+            throw new Error('Erro na requisição de like.');
+        }
+
+        const data = await response.json();
+
+        const likeCountElement = document.getElementById('like-count');
+        let currentLikes = parseInt(likeCountElement.textContent || '0');
+        
+        if (data.liked === true) {
+            likeCountElement.textContent = currentLikes + 1;
+            document.getElementById('like-btn').classList.add('active'); 
+        } else {
+            likeCountElement.textContent = Math.max(0, currentLikes - 1); 
+            document.getElementById('like-btn').classList.remove('active'); 
         }
     } catch (err) {
-        console.log("Erro ao curtir:", err);
+        console.error('Erro ao curtir/descurtir:', err);
+        alert('Ocorreu um erro ao processar o like.');
     }
 }
 
 async function toggleFavorite(fotoId) {
     const token = localStorage.getItem('usuario')
+    if (!token) {
+        alert('Você precisa estar logado para curtir uma foto.');
+        return;
+    }
 
     try {
-        const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}/favorite`, {
+        const response = await fetch(`http://localhost:3000/fotos/${fotoId}/favorite`, {
             method: "POST",
-            headers: { "Authorization": `Bearer ${token}` }
+            headers: { 
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}` 
+            }
         });
 
-        const data = await resposta.json();
-        if (data.success) {
-            buscarFotoUnica(fotoId); // Atualiza contadores
+        if (!response.ok) {
+            throw new Error('Erro na requisição de like.');
+        }
+
+        const data = await response.json();
+
+        const savesCountElement = document.getElementById('saves-count')
+        let currentSaves = parseInt(savesCountElement.textContent || '0')
+
+        if (data.saved === true) {
+            savesCountElement.textContent = currentSaves + 1;
+            document.getElementById('btn-favorite').classList.add('active'); 
+        } else {
+            savesCountElement.textContent = Math.max(0, currentSaves - 1); 
+            document.getElementById('btn-favorite').classList.remove('active'); 
         }
     } catch (err) {
-        console.log("Erro ao favoritar:", err);
+        console.error('Erro ao salvar/desalvar:', err);
+        alert('Ocorreu um erro ao processar o salvamento.');
     }
 }
 
