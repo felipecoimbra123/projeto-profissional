@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sigmar&display=swap');
+
+
+
+
+
+*{
+
+    margin: 0;
+
+    padding: 0;
+
+    box-sizing: border-box;
+
+}
+
+
+
+body{
+
+    background-color: wheat;
+
+}
+
+
+
+header{
+
+    background-color: #FF6600;
+
+    padding: 30px;
+
+}
+
+
+
+ul{
+
+    display: flex;
+
+    justify-content: space-around;
+
+    align-items: center;
+
+    list-style-type: none;
+
+}
+
+
+
+a{
+
+    text-transform: uppercase;
+
+    text-decoration: none;
+
+    color: white;
+
+    font-size: 25px;
+
+    font-family: "Lato", sans-serif;
+
+
+
+    &:hover {
+
+        color: black;
+
+        transition: 0.4s;
+
+    }
+
+}
+
+
+
+.profile-icon:hover{
+
+    filter: invert();
+
+    cursor: pointer;
+
+    transition: 0.4s;
+
+}
+
+
+
+.button-new-photo{
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    padding: 20px;
+
+}
+
+
+
+.button-new-photo a{
+
+    border: none;
+
+    background-color: #9966CC;
+
+    color: white;
+
+    width: 250px;
+
+    cursor: pointer;
+
+    padding: 15px;
+
+    display: flex;
+
+    justify-content: space-around;
+
+    font-size: 20px;
+
+    border-radius: 10px;
+
+}
+
+.main-home {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.section-relatar-problema {
+    width: 100%;
+    max-width: 600px;
+    margin-top: 50px;
+}
+
+.card-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.card-header {
+    background-color: #FF6600;
+    color: white;
+    padding: 20px;
+    font-family: "Lato", sans-serif;
+}
+
+.card-header h2 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
+.card-option {
+    background-color: white;
+    padding: 20px;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    transition: background-color 0.3s;
+}
+
+.card-option:last-child {
+    border-bottom: none;
+}
+
+.card-option:hover {
+    background-color: #ffeee6;
+}
+
+.card-option h3 {
+    color: #FF6600;
+    font-family: "Lato", sans-serif;
+    font-weight: 700;
+    margin-bottom: 5px;
+}
+
+.card-option p {
+    color: #333;
+    font-family: "Lato", sans-serif;
+    font-size: 0.9em;
+}
+
+.last-option {
+    min-height: 50px;
+    border-bottom: none;
+}
