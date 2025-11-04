@@ -26,7 +26,7 @@ async function buscarTodasAsFotos() {
                 photoCard.innerHTML = `
                     <p class="photo-title">${foto.autorNome}</p>
                     <img 
-                        src="${imageUrl}" 
+                        src="${ imageUrl}" 
                         alt="${foto.descricao || 'Foto postada por ' + foto.autorNome}" 
                         class="photo-img"
                     >
