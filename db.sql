@@ -64,10 +64,11 @@ create table favorites(
 	user_id int not null,
 	foreign key (post_id) references fotografia(id) ON DELETE CASCADE,
 	foreign key (user_id) references usuario(id) ON DELETE CASCADE
-)
+);
 
 select * from usuario;
-
 select * from fotografia;
+select * from likes;
+select * from favorites;
 
 drop database fotografia_pp;
