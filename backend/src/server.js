@@ -490,9 +490,8 @@ app.get("/feedbacks", autenticarToken, async (req, res) => {
 
 app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
     try {
-        const userId = req.usuario.id; // ID do usuário logado
+        const userId = req.usuario.id;
 
-        // SQL para contar todos os likes recebidos em todas as fotos do usuário
         const query = `
             SELECT 
                 COUNT(l.id) AS totalLikes 
@@ -519,6 +518,39 @@ app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
         return res.status(500).json({ 
             success: false, 
             message: 'Erro interno ao buscar total de likes', 
+            error: err.message 
+        });
+    }
+});
+
+app.get("/usuario/stats/meus-salvos", autenticarToken, async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+
+        const query = `
+            SELECT 
+                COUNT(f.id) AS totalSalvos 
+            FROM 
+                favorites f
+            WHERE 
+                f.user_id = ?;
+        `;
+
+        const [results] = await connection.promise().query(query, [userId]);
+
+        const totalSalvos = results[0].totalSalvos || 0;
+
+        return res.json({ 
+            success: true, 
+            message: 'Total de salvos listado com sucesso', 
+            totalSalvos: totalSalvos 
+        });
+
+    } catch (err) {
+        console.error('Erro ao buscar total de salvos:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar total de salvos', 
             error: err.message 
         });
     }

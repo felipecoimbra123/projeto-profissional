@@ -36,20 +36,16 @@ async function buscarTodasAsFotos() {
                         alt="${foto.descricao || 'Foto postada por ' + foto.autorNome}" 
                         class="photo-img"
                     >
-                `;
-
-               // NO ARQUIVO /frontend/script/explorar.js
-
-// ... (código anterior)
+                `;  
 
                 photoCard.addEventListener('click', (event) => {
-                    if (event.target.classList.contains('autor-link')) {
-                        event.stopPropagation();
-                        return;
-                    }
+                    if (event.target.classList.contains('autor-link')) {
+                        event.stopPropagation();
+                    return;
+                }
 
-                    window.location.href = `fotografia.html?id=${foto.id}`; 
-                });
+                    window.location.href = `fotografia.html?id=${foto.id}`; 
+                });
 
                 galleryContainer.appendChild(photoCard);
             });

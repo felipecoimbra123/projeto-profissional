@@ -5,16 +5,18 @@ const fotosPerfilSection = document.querySelector(".fotos-perfil");
 const statsElements = document.querySelectorAll(".profile-stats span");
 let postCountElement = null;
 let likeCountElement = null
+let savedCountElement = null
 
 statsElements.forEach(span => {
   const text = span.textContent.toLowerCase()
     if (text.includes('posts')) {
         postCountElement = span;
     } else if (text.includes('likes')) {
-      likeCountElement = span;
+        likeCountElement = span;
+    } else if (text.includes('salvos')) {
+        savedCountElement = span
     }
 });
-
 
 async function buscarPerfil() {
     try {
@@ -65,7 +67,7 @@ async function buscarPerfil() {
 
 async function buscarMeusLikes() {
     try {
-        const token = localStorage.getItem("usuario"); // Assumindo 'usuario' ou 'token'
+        const token = localStorage.getItem("usuario");
         if (!token) return;
 
         const resposta = await fetch("http://localhost:3000/usuario/stats/meus-likes", { 
@@ -82,7 +84,6 @@ async function buscarMeusLikes() {
 
         const data = await resposta.json();
 
-        // 💡 Assumimos que o backend retornará algo como: { success: true, totalLikes: 15 }
         if (data.success && likeCountElement) {
             const likesCount = data.totalLikes || 0; 
             likeCountElement.textContent = `${likesCount} Likes`;
@@ -91,7 +92,39 @@ async function buscarMeusLikes() {
     } catch (err) {
         console.error("Erro ao carregar meus likes:", err.message);
         if (likeCountElement) {
-            likeCountElement.textContent = `0 Likes`; // Garante que exiba 0 em caso de erro
+            likeCountElement.textContent = `0 Likes`;
+        }
+    }
+}
+
+async function buscarMeusSalvos() {
+    try {
+        const token = localStorage.getItem("usuario"); 
+        if (!token) return;
+
+        const resposta = await fetch("http://localhost:3000/usuario/stats/meus-salvos", { 
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao buscar o total de salvos");
+        }
+
+        const data = await resposta.json();
+
+        if (data.success && savedCountElement) {
+            const savedCount = data.totalSalvos || 0; 
+            savedCountElement.textContent = `${savedCount} Salvos`;
+        }
+
+    } catch (err) {
+        console.error("Erro ao carregar meus salvos:", err.message);
+        if (savedCountElement) {
+            savedCountElement.textContent = `0 Salvos`;
         }
     }
 }
@@ -150,5 +183,6 @@ if (usuarioQuery === "me") {
         buscarPerfil();
         buscarMinhasFotos();
         buscarMeusLikes();
+        buscarMeusSalvos();
     });
 }
