@@ -58,4 +58,33 @@ button {
 button:hover {
   background-color: #e05500;
 }
-  
+
+input[type='file'] {
+  padding: 8px;
+  font-size: 20px;
+}
+
+.label-arquivo {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: white;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.4s;
+  text-align: center;
+  font-family: "Lexend", sans-serif;
+  font-size: 1rem;
+  border: 1px solid rgb(146, 145, 145);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  user-select: none;
+}
+
+.label-arquivo:hover {        
+  opacity: 0.5;
+  color: black;
+}
+
+.label-arquivo:active {
+  transform: scale(0.99);
+}

@@ -556,6 +556,34 @@ app.get("/usuario/stats/meus-salvos", autenticarToken, async (req, res) => {
     }
 });
 
+app.post('/artigos/publicar', autenticarToken, async (req, res) => {
+    const ArtigoEsquema = z.object({
+        titulo: z.string().min(1, { message: 'O título é obrigatório.' }).max(255),
+        categoria: z.enum(["tecnica", "historia", "curiosidade"], { message: 'Categoria inválida.' }),
+        conteudo: z.string().min(1, { message: 'O conteúdo é obrigatório.' })
+    });
+
+    const validacao = ArtigoEsquema.safeParse(req.body);
+
+    if (!validacao.success) {
+        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    try {
+        const autor_id = req.usuario.id;
+        const { titulo, categoria, conteudo } = validacao.data;
+        
+        const query = 'INSERT INTO artigo (titulo, conteudo, categoria, autor_id, imagemArtigo) VALUES (?, ?, ?, ?, NULL)';
+
+        const [result] = await connection.promise().query(query, [titulo, conteudo, categoria, autor_id]);
+
+        return res.status(201).json({ success: true, message: 'Artigo publicado com sucesso!', id: result.insertId });
+    } catch (err) {
+        console.error('Erro ao publicar artigo:', err);
+        return res.status(500).json({ success: false, message: 'Erro interno ao publicar artigo', error: err.message });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })
