@@ -397,7 +397,6 @@ app.post("/fotos/:postId/like", autenticarToken, (req, res) => {
   
   app.get("/fotos", async (req, res) => {
     try {
-        // Consulta SQL para buscar a ID, URL e descrição da foto, e o nome do autor
         const query = `
             SELECT 
                 f.id, 
@@ -426,6 +425,32 @@ app.post("/fotos/:postId/like", autenticarToken, (req, res) => {
             message: 'Erro interno ao buscar as fotos', 
             error: err.message 
         });
+    }
+});
+
+app.post("/feedback", autenticarToken, async (req, res) => {
+    const feedbackEsquema = z.object({
+        texto: z.string().max(500, { message: 'O feedback deve ter no máximo 265 caracteres' }).min(1, { message: 'O feedback não pode ser vazio' })
+    });
+
+    const validacao = feedbackEsquema.safeParse(req.body);
+
+    if (!validacao.success) {
+        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    try {
+        const autor_id = req.usuario.id;
+        const { texto } = validacao.data;
+
+        const query = 'INSERT INTO feedback (texto, autor_id) VALUES (?, ?)';
+
+        const [result] = await connection.promise().query(query, [texto, autor_id]);
+
+        return res.status(201).json({ success: true, message: 'Feedback enviado com sucesso! Agradecemos sua contribuição', id: result.insertId });
+    } catch (err) {
+        console.error('Erro ao postar feedback:', err);
+        return res.status(500).json({ success: false, message: 'Erro interno ao enviar feedback', error: err.message });
     }
 });
 
