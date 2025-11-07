@@ -17,13 +17,6 @@ header{
     padding: 30px;
 }
 
-ul{
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    list-style-type: none;
-}
-
 header a{
     text-transform: uppercase;
     text-decoration: none;
@@ -35,6 +28,13 @@ header a{
         color: black;
         transition: 0.4s;
     }
+}
+
+ul{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
 }
 
 a{

@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap');
+
+/* Estilos Globais */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: wheat; /* Cor de fundo do corpo */
+    font-family: "Lato", sans-serif;
+}
+
+/* Estilos do Cabeçalho (Header) */
+.cabecalho {
+    background-color: #FF6600; /* Cor laranja principal */
+    padding: 30px;
+}
+
+.nav-header ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    list-style-type: none;
+}
+
+.nav-header a {
+    text-transform: uppercase;
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    font-family: "Lato", sans-serif;
+    transition: 0.4s;
+}
+
+.nav-header a:hover {
+    color: black;
+}
+
+.profile-icon {
+    width: 40px;
+    height: 40px;
+    fill: white;
+}
+
+.profile-icon:hover {
+    filter: invert();
+    cursor: pointer;
+    transition: 0.4s;
+}
+
+/* Estilos Específicos para a Página de Feedbacks */
+
+.feedback-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #fcfcfc;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+#feedback-list-title {
+    text-align: center;
+    color: #FF6600;
+    margin-bottom: 30px;
+    font-weight: 700;
+    font-size: 2em;
+}
+
+.feedback-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background-color: white;
+}
+
+.feedback-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px dashed #ddd;
+}
+
+.feedback-author-img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 15px;
+    border: 2px solid #FF6600;
+}
+
+.feedback-author-name {
+    font-weight: 700;
+    color: #333;
+    font-size: 1.1em;
+}
+
+.feedback-date {
+    font-size: 0.85em;
+    color: #777;
+    margin-left: auto;
+}
+
+.feedback-text {
+    color: #555;
+    margin-top: 10px;
+    line-height: 1.5;
+    white-space: pre-wrap; /* Preserva formatação do texto */
+}
+
+.loading-message, .error-message, .no-feedback-message {
+    text-align: center;
+    padding: 30px;
+    font-size: 1.2em;
+    color: #FF6600;
+    font-weight: 500;
+}

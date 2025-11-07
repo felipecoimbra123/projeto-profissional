@@ -454,6 +454,40 @@ app.post("/feedback", autenticarToken, async (req, res) => {
     }
 });
 
+app.get("/feedbacks", autenticarToken, async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                f.id, 
+                f.texto, 
+                f.criadoEm,
+                u.nome AS autorNome, 
+                u.imagemPerfil AS autorImagemPerfil 
+            FROM 
+                feedback f 
+            JOIN 
+                usuario u ON f.autor_id = u.id 
+            ORDER BY 
+                f.criadoEm DESC;
+        `;
+
+        const [results] = await connection.promise().query(query);
+
+        return res.json({ 
+            success: true, 
+            message: 'Feedbacks listados com sucesso', 
+            data: results 
+        });
+    } catch (err) {
+        console.error('Erro ao buscar feedbacks:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar feedbacks', 
+            error: err.message 
+        });
+    }
+});
+
 app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
     try {
         const userId = req.usuario.id; // ID do usuário logado
