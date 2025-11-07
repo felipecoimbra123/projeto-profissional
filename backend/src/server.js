@@ -397,12 +397,12 @@ app.post("/fotos/:postId/like", autenticarToken, (req, res) => {
   
   app.get("/fotos", async (req, res) => {
     try {
-        const query = `
-            SELECT 
+        const query = `SELECT 
                 f.id, 
                 f.url, 
                 f.descricao, 
-                u.nome AS autorNome 
+                u.nome AS autorNome,
+                u.id AS autorId
             FROM 
                 fotografia f 
             JOIN 

@@ -23,8 +23,14 @@ async function buscarTodasAsFotos() {
                 
                 const imageUrl = `http://localhost:3000${foto.url}`;
                 
+                const autorId = foto.autorId || 'default';
+
                 photoCard.innerHTML = `
-                    <p class="photo-title">${foto.autorNome}</p>
+                    <p class="photo-title">
+                        <a href="perfil.html?user=${autorId}" class="autor-link">
+                            ${foto.autorNome}
+                        </a>
+                    </p>
                     <img 
                         src="${ imageUrl}" 
                         alt="${foto.descricao || 'Foto postada por ' + foto.autorNome}" 
@@ -32,9 +38,18 @@ async function buscarTodasAsFotos() {
                     >
                 `;
 
-                photoCard.addEventListener('click', () => {
-                    window.location.href = `fotografia.html?id=${foto.id}`; 
-                });
+               // NO ARQUIVO /frontend/script/explorar.js
+
+// ... (código anterior)
+
+                photoCard.addEventListener('click', (event) => {
+                    if (event.target.classList.contains('autor-link')) {
+                        event.stopPropagation();
+                        return;
+                    }
+
+                    window.location.href = `fotografia.html?id=${foto.id}`; 
+                });
 
                 galleryContainer.appendChild(photoCard);
             });

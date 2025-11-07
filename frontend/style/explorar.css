@@ -25,17 +25,41 @@ ul{
     list-style-type: none;
 }
 
-a{
+.nav-header a {
     text-transform: uppercase;
     text-decoration: none;
     color: white;
     font-size: 25px;
     font-family: "Lato", sans-serif;
+}
 
-    &:hover {
-        color: black;
-        transition: 0.4s;
-    }
+.nav-header a:hover {
+    color: black;
+    transition: 0.4s;
+}
+
+.autor-link {
+    font-size: 16px; 
+    text-transform: none; 
+    color: white; 
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.autor-link:hover {
+    color: #FFC0CB;
+    text-decoration: underline; 
+}
+
+.photo-title {
+    font-size: 18px;
+    color: white;
+    background-color: #333;
+    padding: 10px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .profile-icon:hover{
