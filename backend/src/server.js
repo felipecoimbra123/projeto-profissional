@@ -454,6 +454,42 @@ app.post("/feedback", autenticarToken, async (req, res) => {
     }
 });
 
+app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
+    try {
+        const userId = req.usuario.id; // ID do usuário logado
+
+        // SQL para contar todos os likes recebidos em todas as fotos do usuário
+        const query = `
+            SELECT 
+                COUNT(l.id) AS totalLikes 
+            FROM 
+                likes l
+            JOIN 
+                fotografia f ON l.post_id = f.id
+            WHERE 
+                f.autor_id = ?;
+        `;
+
+        const [results] = await connection.promise().query(query, [userId]);
+
+        const totalLikes = results[0].totalLikes || 0;
+
+        return res.json({ 
+            success: true, 
+            message: 'Total de likes listado com sucesso', 
+            totalLikes: totalLikes 
+        });
+
+    } catch (err) {
+        console.error('Erro ao buscar total de likes:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar total de likes', 
+            error: err.message 
+        });
+    }
+});
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })

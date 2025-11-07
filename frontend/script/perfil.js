@@ -4,10 +4,14 @@ const fotosPerfilSection = document.querySelector(".fotos-perfil");
 
 const statsElements = document.querySelectorAll(".profile-stats span");
 let postCountElement = null;
+let likeCountElement = null
 
 statsElements.forEach(span => {
-    if (span.textContent.toLowerCase().includes('posts')) {
+  const text = span.textContent.toLowerCase()
+    if (text.includes('posts')) {
         postCountElement = span;
+    } else if (text.includes('likes')) {
+      likeCountElement = span;
     }
 });
 
@@ -56,6 +60,39 @@ async function buscarPerfil() {
 
     } catch (err) {
         console.error("Erro na busca do perfil:", err.message);
+    }
+}
+
+async function buscarMeusLikes() {
+    try {
+        const token = localStorage.getItem("usuario"); // Assumindo 'usuario' ou 'token'
+        if (!token) return;
+
+        const resposta = await fetch("http://localhost:3000/usuario/stats/meus-likes", { 
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!resposta.ok) {
+            throw new Error("Erro ao buscar o total de likes");
+        }
+
+        const data = await resposta.json();
+
+        // 💡 Assumimos que o backend retornará algo como: { success: true, totalLikes: 15 }
+        if (data.success && likeCountElement) {
+            const likesCount = data.totalLikes || 0; 
+            likeCountElement.textContent = `${likesCount} Likes`;
+        }
+
+    } catch (err) {
+        console.error("Erro ao carregar meus likes:", err.message);
+        if (likeCountElement) {
+            likeCountElement.textContent = `0 Likes`; // Garante que exiba 0 em caso de erro
+        }
     }
 }
 
@@ -112,5 +149,6 @@ if (usuarioQuery === "me") {
     document.addEventListener('DOMContentLoaded', () => {
         buscarPerfil();
         buscarMinhasFotos();
+        buscarMeusLikes();
     });
 }
