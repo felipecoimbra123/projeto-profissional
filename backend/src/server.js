@@ -556,7 +556,7 @@ app.get("/usuario/stats/meus-salvos", autenticarToken, async (req, res) => {
     }
 });
 
-app.post('/artigos/publicar', autenticarToken, async (req, res) => {
+app.post('/artigos/publicar', autenticarToken, upload.single('imagemArtigo'), async (req, res) => {
     const ArtigoEsquema = z.object({
         titulo: z.string().min(1, { message: 'O título é obrigatório.' }).max(255),
         categoria: z.enum(["tecnica", "historia", "curiosidade"], { message: 'Categoria inválida.' }),
@@ -566,24 +566,34 @@ app.post('/artigos/publicar', autenticarToken, async (req, res) => {
     const validacao = ArtigoEsquema.safeParse(req.body);
 
     if (!validacao.success) {
+        if (req.file) {
+            console.log(`Arquivo ${req.file.filename} excluído devido a falha de validação de texto.`);
+        }
         return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, error: 'A imagem de capa é obrigatória.' });
     }
 
     try {
         const autor_id = req.usuario.id;
         const { titulo, categoria, conteudo } = validacao.data;
+        const imagemArtigoPath = `/assets/${req.file.filename}`;
         
-        const query = 'INSERT INTO artigo (titulo, conteudo, categoria, autor_id, imagemArtigo) VALUES (?, ?, ?, ?, NULL)';
+        const query = 'INSERT INTO artigo (titulo, conteudo, categoria, autor_id, imagemArtigo) VALUES (?, ?, ?, ?, ?)';
 
-        const [result] = await connection.promise().query(query, [titulo, conteudo, categoria, autor_id]);
+        const [result] = await connection.promise().query(query, [titulo, conteudo, categoria, autor_id, imagemArtigoPath]);
 
         return res.status(201).json({ success: true, message: 'Artigo publicado com sucesso!', id: result.insertId });
     } catch (err) {
         console.error('Erro ao publicar artigo:', err);
+        if (req.file) {
+            console.log(`Arquivo ${req.file.filename} excluído devido a erro no banco de dados.`);
+        }
         return res.status(500).json({ success: false, message: 'Erro interno ao publicar artigo', error: err.message });
     }
 });
-
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })

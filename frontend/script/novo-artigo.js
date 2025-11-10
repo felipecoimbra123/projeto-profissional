@@ -1,4 +1,4 @@
-// /frontend/script/novo_artigo.js
+// /frontend/script/novo_artigo.js - Trecho modificado
 
 document.addEventListener('DOMContentLoaded', () => {
     const formArtigo = document.getElementById('form-artigo');
@@ -12,38 +12,38 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (!token) {
             alert("Você precisa estar logado para publicar um artigo.");
-            window.location.href = 'index.html'; // Redireciona para o login ou página inicial
+            window.location.href = 'index.html';
             return;
         }
 
-        const titulo = document.getElementById('titulo').value;
-        const categoria = document.getElementById('categoria').value;
-        const conteudo = document.getElementById('conteudo').value;
-
-        const artigoData = {
-            titulo: titulo,
-            categoria: categoria,
-            conteudo: conteudo
-        };
+        // --- MUDANÇA AQUI: Usar FormData ---
+        const formData = new FormData(formArtigo);
+        // O FormData coleta todos os campos do formulário (titulo, categoria, conteudo, imagemArtigo)
+        // Você pode verificar se a imagem foi selecionada:
+        const imagemArtigo = document.getElementById('imagemArtigo').files[0];
+        if (!imagemArtigo) {
+             alert("A Imagem de Capa é obrigatória!");
+             return;
+        }
+        // O campo 'imagemArtigo' já está no FormData por causa do construtor.
 
         try {
             const resposta = await fetch("http://localhost:3000/artigos/publicar", {
                 method: "POST",
                 headers: {
+                    // Remover "Content-Type": "application/json"
                     "Authorization": `Bearer ${token}`,
-                    "Content-Type": "application/json"
                 },
-                body: JSON.stringify(artigoData)
+                // --- MUDANÇA AQUI: Enviar FormData ---
+                body: formData 
             });
 
             const data = await resposta.json();
 
             if (resposta.ok && data.success) {
                 alert(data.message);
-                // Opcional: Redirecionar para a página de artigos ou para a visualização do novo artigo
                 window.location.href = 'artigos.html'; 
             } else {
-                // Tratar erros de validação (400) ou outros erros do servidor (500)
                 const errorMessage = data.error || data.message || "Erro desconhecido ao publicar o artigo.";
                 alert("Falha na publicação: " + errorMessage);
                 console.error("Erro do servidor:", data);
