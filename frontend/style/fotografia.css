@@ -238,3 +238,42 @@ svg{
     font-weight: bold;
     color: #333;
 }
+
+/* Estilização para a área onde ficam as ações (Editar/Excluir) */
+#acoes-autor {
+    display: flex;
+    gap: 10px; /* Espaço entre os botões */
+    margin-top: 10px;
+    margin-bottom: 20px;
+    justify-content: flex-end; /* Alinha os botões à direita (opcional) */
+}
+
+/* Estilo base para os botões de ação */
+.btn-acao {
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+/* Estilo específico para o botão de Editar */
+#btn-editar {
+    background-color: #007bff; /* Azul */
+    color: white;
+}
+
+#btn-editar:hover {
+    background-color: #0056b3;
+}
+
+/* Estilo específico para o botão de Excluir */
+.btn-excluir {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.btn-excluir:hover {
+    background-color: #c82333;
+}

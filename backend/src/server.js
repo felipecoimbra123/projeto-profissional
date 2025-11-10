@@ -594,6 +594,62 @@ app.post('/artigos/publicar', autenticarToken, upload.single('imagemArtigo'), as
         return res.status(500).json({ success: false, message: 'Erro interno ao publicar artigo', error: err.message });
     }
 });
+
+app.get('/artigos', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                artigo.id,
+                artigo.titulo,
+                artigo.conteudo,
+                artigo.categoria,
+                artigo.imagemArtigo,
+                artigo.criadoEm,
+                usuario.nome AS autorNome,
+                usuario.id AS autorId
+            FROM artigo
+            JOIN usuario ON usuario.id = artigo.autor_id
+            ORDER BY artigo.criadoEm DESC;
+        `;
+
+        const [rows] = await connection.promise().query(query);
+        return res.status(200).json({ success: true, artigos: rows });
+
+    } catch (err) {
+        console.error('Erro ao buscar artigos:', err);
+        return res.status(500).json({ success: false, error: 'Erro ao buscar artigos.' });
+    }
+});
+
+app.get('/artigos/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `
+            SELECT 
+                artigo.*,
+                usuario.nome AS autorNome,
+                usuario.id AS autorId
+            FROM artigo
+            JOIN usuario ON usuario.id = artigo.autor_id
+            WHERE artigo.id = ?;
+        `;
+
+        const [rows] = await connection.promise().query(query, [id]);
+
+        if (rows.length === 0) {
+            return res.status(404).json({ success: false, error: 'Artigo não encontrado.' });
+        }
+
+        return res.status(200).json({ success: true, artigo: rows[0] });
+
+    } catch (err) {
+        console.error('Erro ao buscar artigo:', err);
+        return res.status(500).json({ success: false, error: 'Erro ao buscar o artigo.' });
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
 })
