@@ -239,6 +239,51 @@ app.get("/fotos/:id", async (req, res) => {
     }
 });
 
+app.get("/usuario", async (req, res) => {
+    try {
+        const userId = req.query.id;
+
+        if (!userId) {
+            return res.status(400).json({
+                success: false,
+                message: "ID do usuário não fornecido."
+            });
+        }
+
+        const sql = "SELECT id, nome, email, imagemPerfil FROM usuario WHERE id = ?";
+        connection.query(sql, [userId], (err, resultados) => {
+            if (err) return res.status(500).json({ success: false, message: "Erro no servidor." });
+
+            if (resultados.length === 0) {
+                return res.status(404).json({
+                    success: false,
+                    message: "Usuário não encontrado."
+                });
+            }
+
+            return res.json({
+                success: true,
+                data: resultados[0]
+            });
+        });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Erro ao buscar usuário." });
+    }
+});
+
+app.get("/fotos/usuario", (req, res) => {
+    const userId = req.query.id;
+
+    const sql = "SELECT * FROM fotografia WHERE autor_id = ?";
+    connection.query(sql, [userId], (err, resultados) => {
+        if (err) return res.status(500).json({ success: false, message: "Erro ao buscar fotos" });
+
+        res.json({ success: true, data: resultados });
+    });
+});
+
+
 app.put("/usuario", autenticarToken, (req, res) => {
     const cadastroUsuarioEsquema = z.object({
         nome: z.string().max(20, { message: "O nome deve ter no máximo 20 caracteres" }),

@@ -174,6 +174,45 @@ async function buscarMinhasFotos() {
     }
 }
 
+async function buscarPerfilDeOutro(idUsuario) {
+    try {
+        const resposta = await fetch(`http://localhost:3000/usuario?id=${idUsuario}`);
+
+        const data = await resposta.json();
+
+        if (data.success) {
+            const usuario = data.data;
+
+            if (nomeElement) nomeElement.textContent = usuario.nome;
+            if (profilePicElement && usuario.imagemPerfil) {
+                profilePicElement.src = `http://localhost:3000${usuario.imagemPerfil}`;
+            }
+
+            buscarFotosDoUsuario(idUsuario);
+
+        } else {
+            alert("Usuário não encontrado");
+        }
+
+    } catch (err) {
+        console.error("Erro:", err.message);
+    }
+}
+
+async function buscarFotosDoUsuario(idUsuario) {
+    const resposta = await fetch(`http://localhost:3000/fotos/usuario?id=${idUsuario}`);
+    const data = await resposta.json();
+
+    fotosPerfilSection.innerHTML = '';
+
+    data.data.forEach(foto => {
+        const container = document.createElement('div');
+        container.classList.add('foto-item');
+        container.innerHTML = `<img src="http://localhost:3000${foto.url}" alt="">`;
+        fotosPerfilSection.appendChild(container);
+    });
+}
+
 
 const urlParams = new URLSearchParams(window.location.search);
 const usuarioQuery = urlParams.get("user");
