@@ -1,3 +1,11 @@
+const botaoAdicionarArtigo = document.querySelector('.link-post-artigos')
+
+botaoAdicionarArtigo.addEventListener('click', (e) => {
+    e.preventDefault()
+
+    window.location.href = 'criarArtigo.html'
+})
+
 async function carregarArtigos() {
     try {
         const response = await fetch('http://localhost:3000/artigos');
