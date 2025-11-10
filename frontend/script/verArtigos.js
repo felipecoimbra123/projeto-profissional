@@ -11,7 +11,6 @@ async function carregarArtigo() {
 
     document.getElementById("titulo-artigo").innerText = artigo.titulo;
     document.getElementById("conteudo-artigo").innerText = artigo.conteudo;
-    document.getElementById("imagem-artigo").src = artigo.imagemArtigo;
 }
 
 carregarArtigo();
