@@ -746,6 +746,32 @@ app.delete('/artigos/:id', autenticarToken, async (req, res) => {
     }
 });
 
+app.put('/fotografia/:id', autenticarToken, upload.single('url'), async (req, res) => {
+    const { id } = req.params;
+    const url = req.file ? `/assets/${req.file.filename}` : null;
+    const { descricao } = req.body;
+    const usuarioId = req.usuario.id
+
+    try {
+        const sql = `
+            UPDATE fotografia 
+            SET url = ?, descricao = ?
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, [url, descricao, id, usuarioId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Fotografia não encontrada' });
+        }
+
+        return res.json({ success: true, message: "Fotografia atualizada com sucesso!" });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Erro ao atualizar fotografia", error });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)

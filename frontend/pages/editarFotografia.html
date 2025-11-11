@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edição de Perfil</title>
+    <link rel="stylesheet" href="/frontend/style/editarFotografia.css">
+    <link rel="shortcut icon" href="/assets/Social Picture.png" type="image/x-icon">
+</head>
+<body>
+    <main class="main-form">
+        <form class="form-edicao-fotografia" id="form-editar-fotografia">
+            <h2>Editar Fotografia</h2>
+            <div class="form-div">
+                <label for="url" class="label-fotografia"> 📸 Clique aqui para adicionar a foto!</label>
+                <input type="file" accept="image/*" id="url" name="url" required style="display: none;">
+            </div>
+            <div class="form-div">
+                <label for="descricao-fotografia">Descrição:</label>
+                <input type="text" id="descricao-fotografia" placeholder="Digite a nova descrição da imagem..." required>
+            </div>
+            <div class="div-button-edicao-fotografia">
+                <button class="button-editar-fotografia" type="submit">Editar</button>
+            </div>
+        </form>
+    </main>
+    <script src="/frontend/script/editarFotografia.js"></script>
+</body>
+</html>

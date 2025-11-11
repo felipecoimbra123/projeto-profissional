@@ -11,6 +11,9 @@ const btnFavorite = document.getElementById('btn-favorite')
 
 const linkPostComentario = document.querySelector('.link-post-fotografia');
 
+const urlParams = new URLSearchParams(window.location.search);
+const id = urlParams.get("id");
+
 async function buscarComentarios(fotoId) {
     if (!fotoId) return;
 
@@ -220,6 +223,10 @@ async function toggleFavorite(fotoId) {
         alert('Ocorreu um erro ao processar o salvamento.');
     }
 }
+
+document.getElementById("btn-editar-fotografia").addEventListener("click", () => {
+    window.location.href = `editarFotografia.html?id=${id}`;
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);

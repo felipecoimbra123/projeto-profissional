@@ -258,22 +258,39 @@ svg{
     transition: background-color 0.3s ease;
 }
 
-/* Estilo específico para o botão de Editar */
-#btn-editar {
-    background-color: #007bff; /* Azul */
-    color: white;
+.btn-editar-fotografia {
+    background: #FF6600;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: .3s;
 }
 
-#btn-editar:hover {
-    background-color: #0056b3;
+.btn-editar-fotografia:hover {
+    cursor: pointer;
 }
 
-/* Estilo específico para o botão de Excluir */
-.btn-excluir {
-    background-color: #dc3545; /* Vermelho */
-    color: white;
+.btn-excluir-fotografia {
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: .3s;
 }
 
-.btn-excluir:hover {
-    background-color: #c82333;
+.btn-excluir-fotografia:hover {
+    cursor: pointer;
 }
+
+.acoes-fotografia {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
