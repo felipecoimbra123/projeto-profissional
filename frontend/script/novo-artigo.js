@@ -1,5 +1,3 @@
-// /frontend/script/novo_artigo.js - Trecho modificado
-
 document.addEventListener('DOMContentLoaded', () => {
     const formArtigo = document.getElementById('form-artigo');
 
@@ -16,32 +14,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        // --- MUDANÇA AQUI: Usar FormData ---
         const formData = new FormData(formArtigo);
-        // O FormData coleta todos os campos do formulário (titulo, categoria, conteudo, imagemArtigo)
-        // Você pode verificar se a imagem foi selecionada:
         const imagemArtigo = document.getElementById('imagemArtigo').files[0];
         if (!imagemArtigo) {
              alert("A Imagem de Capa é obrigatória!");
              return;
         }
-        // O campo 'imagemArtigo' já está no FormData por causa do construtor.
 
         try {
             const resposta = await fetch("http://localhost:3000/artigos/publicar", {
                 method: "POST",
                 headers: {
-                    // Remover "Content-Type": "application/json"
                     "Authorization": `Bearer ${token}`,
                 },
-                // --- MUDANÇA AQUI: Enviar FormData ---
                 body: formData 
             });
 
             const data = await resposta.json();
 
             if (resposta.ok && data.success) {
-                alert(data.message);
                 window.location.href = 'artigos.html'; 
             } else {
                 const errorMessage = data.error || data.message || "Erro desconhecido ao publicar o artigo.";
