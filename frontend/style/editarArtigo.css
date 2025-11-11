@@ -1,0 +1,114 @@
+@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Sora:wght@100..800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(#ff7f23c3, #fe6a0050) no-repeat;
+    background-size: cover;
+    min-height: 100vh;
+    min-height: 100svh;
+}
+
+.main-form {
+    margin: 0 auto;
+    padding: 30px;
+    justify-content: center;
+    max-width: 550px;
+}
+
+.form-edicao-perfil {
+    border-radius: 10px;
+    padding: 20px;
+    background-color: rgb(251, 251, 251);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+h2 {
+    font-family: "Lexend", sans-serif;
+    text-transform: uppercase;
+    font-weight: 200;
+    text-align: center;
+    font-size: 35px;
+    margin: 40px;
+    letter-spacing: 2px;
+}
+
+.form-div {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    padding: 7px;
+    gap: 10px;
+}
+
+.form-div label{
+    font-size: 20px;
+    font-family: 'Lato', sans-serif;
+}
+
+.form-div input {
+    font-size: 15px;
+    outline: none;
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.div-button-edicao-perfil {
+    display: flex;
+    justify-content: center;
+}
+
+.div-button-excluir-perfil {
+    display: flex;
+    justify-content: center;
+}
+
+.button-editar-perfil {
+    width: 200px;
+    margin: 30px;
+    padding: 15px;
+    border: none;
+    font-size: 15px;
+    border-radius: 20px;
+    color: #f5f5f5;
+    background-color: #FF6600;
+    font-family: "Lexend", sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.5;
+        color: black;
+    }
+}
+
+hr{
+    border-width: 1px;
+    border-style: solid;
+    border-color: black;
+}
+
+.button-excluir-perfil {
+    width: 200px;
+    margin: 30px;
+    padding: 15px;
+    border: none;
+    font-size: 15px;
+    border-radius: 20px;
+    color: #f5f5f5;
+    background-color: red;
+    font-family: "Lexend", sans-serif;
+    text-transform: uppercase;
+    cursor: pointer;
+
+    &:hover{
+        opacity: 0.5;
+        color: black;
+    }
+}

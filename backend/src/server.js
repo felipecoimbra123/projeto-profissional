@@ -672,25 +672,54 @@ app.get('/artigos/:id', async (req, res) => {
     try {
         const query = `
             SELECT 
-                artigo.*,
-                usuario.nome AS autorNome,
-                usuario.id AS autorId
+                artigo.id,
+                artigo.titulo,
+                artigo.conteudo,
+                artigo.categoria,
+                artigo.imagemArtigo,
+                artigo.criadoEm,
+                usuario.id AS autorId,
+                usuario.nome AS autorNome
             FROM artigo
             JOIN usuario ON usuario.id = artigo.autor_id
-            WHERE artigo.id = ?;
+            WHERE artigo.id = ?
         `;
 
-        const [rows] = await connection.promise().query(query, [id]);
+        const [results] = await connection.promise().query(query, [id]);
 
-        if (rows.length === 0) {
-            return res.status(404).json({ success: false, error: 'Artigo não encontrado.' });
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Artigo não encontrado' });
         }
 
-        return res.status(200).json({ success: true, artigo: rows[0] });
+        return res.json({ success: true, artigo: results[0] });
 
     } catch (err) {
-        console.error('Erro ao buscar artigo:', err);
-        return res.status(500).json({ success: false, error: 'Erro ao buscar o artigo.' });
+        return res.status(500).json({ success: false, message: 'Erro ao carregar artigo' });
+    }
+});
+
+app.put('/artigos/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params;
+    const { titulo, conteudo} = req.body;
+    const usuarioId = req.usuario.id
+
+    try {
+        const sql = `
+            UPDATE artigo 
+            SET titulo = ?, conteudo = ?
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, [titulo, conteudo, id, usuarioId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Artigo não encontrado' });
+        }
+
+        return res.json({ success: true, message: "Artigo atualizado com sucesso!" });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Erro ao atualizar artigo", error });
     }
 });
 
