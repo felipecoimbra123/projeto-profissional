@@ -228,6 +228,36 @@ document.getElementById("btn-editar-fotografia").addEventListener("click", () =>
     window.location.href = `editarFotografia.html?id=${id}`;
 });
 
+const btnExcluir = document.getElementById("btn-excluir-fotografia");
+
+btnExcluir.addEventListener("click", async () => {
+    const confirmacao = confirm("Tem certeza que deseja excluir este artigo?");
+    if (!confirmacao) return;
+
+    try {
+        const token = localStorage.getItem("usuario");
+
+        const response = await fetch(`http://localhost:3000/fotografia/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Artigo excluído com sucesso!");
+            window.location.href = "perfil.html?user=me";
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+    }
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const fotoId = urlParams.get("id"); 
