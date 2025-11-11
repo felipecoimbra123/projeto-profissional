@@ -31,4 +31,35 @@ document.getElementById("btn-editar-artigo").addEventListener("click", () => {
     window.location.href = `editarArtigo.html?id=${id}`;
 });
 
+const btnExcluir = document.getElementById("btn-excluir-artigo");
+
+btnExcluir.addEventListener("click", async () => {
+    const confirmacao = confirm("Tem certeza que deseja excluir este artigo?");
+    if (!confirmacao) return;
+
+    try {
+        const token = localStorage.getItem("usuario");
+
+        const response = await fetch(`http://localhost:3000/artigos/${id}`, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+            alert("Artigo excluído com sucesso!");
+            window.location.href = "artigos.html";
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error("Erro ao excluir:", error);
+    }
+});
+
+
 carregarArtigo();

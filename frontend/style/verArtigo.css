@@ -92,3 +92,25 @@ a{
 .btn-editar-artigo:hover {
     cursor: pointer;
 }
+
+.btn-excluir-artigo {
+    background: red;
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: .3s;
+}
+
+.btn-excluir-artigo:hover {
+    cursor: pointer;
+}
+
+.acoes-artigo {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+

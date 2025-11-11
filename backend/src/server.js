@@ -723,6 +723,29 @@ app.put('/artigos/:id', autenticarToken, async (req, res) => {
     }
 });
 
+app.delete('/artigos/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params;
+    const usuarioId = req.usuario.id;
+
+    try {
+        const sql = `
+            DELETE FROM artigo
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, [id, usuarioId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Artigo não encontrado ou você não é o autor." });
+        }
+
+        return res.json({ success: true, message: "Artigo excluído com sucesso!" });
+
+    } catch (error) {
+        return res.status(500).json({ success: false, message: "Erro ao excluir artigo", error });
+    }
+});
+
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)
