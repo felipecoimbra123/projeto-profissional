@@ -26,7 +26,6 @@ Para que a aplicação funcione corretamente, siga os passos abaixo.
 
 ### Pré-requisitos
 
-Certifique-se de que os seguintes programas estejam instalados no seu ambiente:
 
 * **Node.js**
 
@@ -34,7 +33,9 @@ Certifique-se de que os seguintes programas estejam instalados no seu ambiente:
 
 ### 1. Clonagem do Repositório
 
-Abra seu terminal e clone o código-fonte:
+git clone https://github.com/seu-usuario/nome-do-repositorio.git 
+cd nome-do-repositorio
+
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
