@@ -20,21 +20,123 @@
 * CSS
 * JavaScript
 
-## 🚀 Configuração e Instalação
+# 🚀 Configuração e Instalação
 
 Para que a aplicação funcione corretamente, siga os passos abaixo.
 
 ### Pré-requisitos
-
-
 * **Node.js**
-
 * **Servidor MySQL**:
 
 ### 1. Clonagem do Repositório
 
+```
 git clone https://github.com/seu-usuario/nome-do-repositorio.git 
 cd nome-do-repositorio
+```
+
+### 2. Instalações das Dependências
+```
+npm install express mysql2 cors dotenv multer jsonwebtoken swagger-jsdoc swagger-ui-express zod bcrypt
+```
+
+### 3. Configuração do Ambiente
+Dentro do arquivo db_config.js, na pasta lib, preencha com suas credenciais do banco de dados
+```
+DB_HOST=localhost
+DB_USER=seu_usuario_mysql
+DB_PASSWORD=sua_senha_mysql
+DB_NAME=fotografia_pp
+JWT_SECRET=senha_muito_da_hora
+```
+
+### 4. Setup do Banco de Dados
+
+```mysql
+create database fotografia_pp;
+use fotografia_pp;
+
+create table usuario(
+	id int primary key auto_increment,
+    nome varchar(255) not null,
+    email varchar(255) not null unique,
+    senha varchar(255) not null,
+    seguidores int,
+    imagemPerfil varchar(255),
+    criadoEm timestamp default current_timestamp
+);
+
+create table seguir(
+	seguidor int,
+    seguindo int,
+    foreign key (seguidor) references usuario(id) ON DELETE CASCADE,
+    foreign key (seguindo) references usuario(id) ON DELETE CASCADE
+);
+
+create table artigo(
+	id int primary key auto_increment,
+    titulo varchar(255),
+    conteudo varchar(255),
+    imagemArtigo varchar(255),
+    categoria varchar(255),
+    criadoEm timestamp default current_timestamp,
+    autor_id int,
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE
+);
+
+create table fotografia(
+	id int primary key auto_increment,
+    titulo varchar(255),
+    descricao varchar(255) not null,
+    url varchar(255) not null,
+    media_avaliacao float,
+    curtidas int,
+    autor_id int,
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE
+);
+
+create table comentario(
+	id int primary key auto_increment,
+    texto varchar(255) not null,
+    fotografia int,
+    autor_id int,
+    foreign key (fotografia) references fotografia(id) ON DELETE CASCADE,
+    foreign key (autor_id) references usuario(id) ON DELETE CASCADE,
+    criadoEm timestamp default current_timestamp
+);
+
+create table likes(
+	id int primary key auto_increment,
+    post_id int not null,
+    user_id int not null,
+    foreign key (post_id) references fotografia(id) ON DELETE CASCADE,
+    foreign key (user_id) references usuario(id) ON DELETE CASCADE
+);
+
+create table favorites(
+	id int primary   key auto_increment,
+	post_id int not null,
+	user_id int not null,
+	foreign key (post_id) references fotografia(id) ON DELETE CASCADE,
+	foreign key (user_id) references usuario(id) ON DELETE CASCADE
+);
+
+create table feedback(
+	id int primary key auto_increment,
+    texto varchar(265) not null,
+    autor_id int,
+    foreign key (autor_id) references usuario(id) ON DELETE SET NULL,
+    criadoEm timestamp default current_timestamp
+);
+```
+
+### 5. Execução 
+Inicie o servidor backend:
+
+```
+cd backend
+npm start
+```
 
 # Acessibilidade
 - [x] Elementos não textuais
