@@ -829,6 +829,55 @@ app.delete('/comentarios/:id', autenticarToken, async (req, res) => {
     }
 });
 
+app.get('/fotos/maisCurtidas', async (req, res) => {
+    try {
+        const [results] = await connection.promise().query(`
+            SELECT 
+                f.id,
+                f.url,
+                f.descricao,
+                u.nome AS autorNome,
+                u.imagemPerfil AS autorImagemPerfil,
+                COUNT(l.id) AS totalCurtidas
+            FROM fotografia f
+            JOIN usuario u ON f.autor_id = u.id
+            LEFT JOIN likes l ON f.id = l.post_id
+            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
+            ORDER BY totalCurtidas DESC
+            LIMIT 8
+        `);
+
+        res.json({ success: true, fotos: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais curtidas' });
+    }
+});
+
+app.get('/fotos/maisSalvas', async (req, res) => {
+    try {
+        const [results] = await connection.promise().query(`
+            SELECT 
+                f.id,
+                f.url,
+                f.descricao,
+                u.nome AS autorNome,
+                u.imagemPerfil AS autorImagemPerfil,
+                COUNT(fav.id) AS totalSalvos
+            FROM fotografia f
+            JOIN usuario u ON f.autor_id = u.id
+            LEFT JOIN favorites fav ON f.id = fav.post_id
+            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
+            ORDER BY totalSalvos DESC
+            LIMIT 8
+        `);
+
+        res.json({ success: true, fotos: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais salvas' });
+    }
+});
 
 
 app.listen(port, () => {
