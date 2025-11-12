@@ -4,11 +4,11 @@
 
 **Aluno:** Felipe Coimbra Rocha dos Santos
 
-**Título do Projeto:** Desvalorização da arte fotográfica no Brasil
+**Título do Projeto:** SOCIAL PICTURE: Aplicação para o enfrentamento da desvalorização da arte fotográfica no Brasil
 
 **Repositório:** [https://github.com/felipecoimbra123/projeto-profissional](https://github.com/felipecoimbra123/projeto-profissional)
 
-**Professor Orientador:** André Nata Mello Botton
+**Professor Orientador:** André Nata Mello Botton e Iuri Nascimento Santos
 
 **Período:** Maio a Novembro de 2025
 
@@ -19,11 +19,6 @@
 * HTML
 * CSS
 * JavaScript
-
-# Funcionalidades
-* Navegação entre páginas
-* Formulário de Cadastro
-* Formulário de Login
 
 # Acessibilidade
 - [x] Elementos não textuais
