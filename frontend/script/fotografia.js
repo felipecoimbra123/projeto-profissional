@@ -100,7 +100,6 @@ async function buscarFotoUnica(fotoId) {
         return;
     }
     
-    // Obtém o token do localStorage
     const token = localStorage.getItem('usuario'); 
 
     if(linkPostComentario) {
@@ -112,13 +111,12 @@ async function buscarFotoUnica(fotoId) {
             'Content-Type': 'application/json'
         };
         
-        // Adiciona o token ao header se ele existir
         if (token) {
             headers['Authorization'] = `Bearer ${token}`;
         }
         
         const resposta = await fetch(`http://localhost:3000/fotos/${fotoId}`, {
-            headers: headers // Envia os headers com ou sem o token
+            headers: headers
         });
         
         if (!resposta.ok) {
@@ -129,8 +127,6 @@ async function buscarFotoUnica(fotoId) {
         
         if (data.success) {
             const foto = data.data;
-
-            // ... (Atualizações de autorNomeElement e imagemElement) ...
             
             if (autorNomeElement) {
                 autorNomeElement.textContent = foto.autorNome;
@@ -139,21 +135,16 @@ async function buscarFotoUnica(fotoId) {
                 imagemElement.src = `http://localhost:3000${foto.url}`;
                 imagemElement.alt = foto.descricao || 'Foto';
             }
-            
-            // ATUALIZAÇÃO CRUCIAL: Exibe a contagem
+        
             if (likesElement) {
-                // Seu backend já retorna curtidas, mas se for nulo, use 0
                 likesElement.textContent = foto.curtidas !== undefined ? foto.curtidas : 0; 
             }
             if (savesElement) {
-                // Seu backend já retorna totalSalvos, mas se for nulo, use 0
                 savesElement.textContent = foto.totalSalvos !== undefined ? foto.totalSalvos : 0; 
             }
             
-            // ATUALIZAÇÃO CRUCIAL: Adiciona/Remove a classe 'active' com base na resposta da API
             if (btnLike) {
-                // Use o novo campo retornado pelo backend
-                if (foto.curtidoPeloUsuario === 1) { // 1 = true
+                if (foto.curtidoPeloUsuario === 1) {
                     btnLike.classList.add('active');
                 } else {
                     btnLike.classList.remove('active');
@@ -161,8 +152,7 @@ async function buscarFotoUnica(fotoId) {
             }
             
             if (btnFavorite) {
-                // Use o novo campo retornado pelo backend
-                if (foto.salvoPeloUsuario === 1) { // 1 = true
+                if (foto.salvoPeloUsuario === 1) {
                     btnFavorite.classList.add('active');
                 } else {
                     btnFavorite.classList.remove('active');
@@ -170,7 +160,6 @@ async function buscarFotoUnica(fotoId) {
             }
             
             if (avaliacaoElement) {
-                // ... (Restante do código de avaliação)
             }
             
             await buscarComentarios(fotoId);
@@ -183,7 +172,7 @@ async function buscarFotoUnica(fotoId) {
 }
 
 async function toggleLike(fotoId) {
-    const token = localStorage.getItem('usuario'); // O token JWT completo
+    const token = localStorage.getItem('usuario');
     if (!token) {
         alert('Você precisa estar logado para curtir uma foto.');
         return;

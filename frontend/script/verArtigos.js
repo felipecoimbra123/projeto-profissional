@@ -11,7 +11,6 @@ async function carregarArtigo() {
         document.getElementById("titulo-artigo").innerText = data.artigo.titulo;
         document.getElementById("conteudo-artigo").innerText = data.artigo.conteudo;
 
-        // Mostrar botão somente se o usuário for dono do artigo
         const token = localStorage.getItem("usuario");
         if (token) {
             const payload = JSON.parse(atob(token.split('.')[1]));

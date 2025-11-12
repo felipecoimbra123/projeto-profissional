@@ -31,10 +31,8 @@ async function buscarPerfil() {
     }
 }
 
-// a logica para carregar o nome do usuario na página de perfil.html
 const token = localStorage.getItem("usuario");
 
-// verifica o token
 if (!token) {
     location.href = "index.html";
 }

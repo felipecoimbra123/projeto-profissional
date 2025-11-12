@@ -28,22 +28,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
-app.post('/fotos/postagem', autenticarToken, upload.single('url'), (req, res) => {
-    const autor_id = req.usuario.id
-    const { descricao } = req.body
-    const imagePath = req.file ? `/assets/${req.file.filename}` : null //verificar
+//ROTAS DO USUÁRIO
 
-    const query = 'INSERT INTO fotografia (descricao, url, autor_id) VALUES (?, ?, ?)'
-
-    connection.query(query, [descricao, imagePath, autor_id], (err, result) => {
-        if (err) {
-            console.log('Erro ao salvar o post', err)
-            return res.status(500).json({ success: false, message: 'Erro ao criar post' })
-        }
-        res.json({ success: true, message: 'Post criado com sucesso', id: result.insertId })
-    })
-})
-
+//cadastro do usuário
 app.post('/usuario/cadastro', async (req, res) => {
     const cadastroUsuarioEsquema = z.object({
         nome: z.string().max(20, { message: 'O nome deve ter no máximo 20 caracteres' }),
@@ -61,28 +48,32 @@ app.post('/usuario/cadastro', async (req, res) => {
 
     try {
         const senhaCriptografada = await encryptPassword(senha)
-
         const query = 'INSERT INTO usuario (nome, email, senha) VALUES (?, ?, ?)'
 
         connection.query(query, [nome, email, senhaCriptografada], (err, results) => {
-            console.log(err)
-            if (err) {  
+            if (err) {
+                // Erro 1062 é geralmente por chave duplicada (email/nome)
+                if (err.code === 'ER_DUP_ENTRY') {
+                    return res.status(409).json({ success: false, message: 'Nome de usuário ou e-mail já em uso.' })
+                }
+                console.error("Erro ao inserir usuário:", err);
                 return res.status(500).json({ success: false, message: 'Erro no servidor' })
             }
 
             const token = signJwt({ id: results.insertId})
 
             if(!token) {
-                res.status(500).json({ success: false})
+                return res.status(500).json({ success: false, message: 'Falha ao gerar token de autenticação.' })
             }
             res.status(201).json({ success: true, results, message: 'Sucesso no cadastro!', token })
-
         })
     } catch (err) {
+        console.error("Erro no processamento da senha/cadastro:", err);
         res.status(500).json({ success: false, message: 'Erro ao processar a senha!' })
     }
 })
 
+//login de usuário
 app.post('/usuario/login', (req, res) => {
     const loginUsuarioEsquema = z.object({
         nome: z.string().max(20),
@@ -92,15 +83,15 @@ app.post('/usuario/login', (req, res) => {
     const validacao = loginUsuarioEsquema.safeParse(req.body)
 
     if (!validacao.success) {
-        console.log(validacao)
         return res.status(400).json({ success: false, errors: validacao.error.errors })
     }
 
     const { nome, senha } = validacao.data
 
-    const query = 'SELECT * FROM usuario WHERE nome = ?'
+    const query = 'SELECT id, nome, senha, email, imagemPerfil FROM usuario WHERE nome = ?'
     connection.query(query, [nome], async (err, results) => {
         if (err) {
+            console.error("Erro ao buscar usuário para login:", err);
             return res.status(500).json({ success: false, message: 'Erro no servidor' })
         }
 
@@ -116,20 +107,23 @@ app.post('/usuario/login', (req, res) => {
             if (senhaCerta) {
                 const token = signJwt({ id: user.id})
                 if(!token) {
-                    res.status(500).json({ success: false})
+                    return res.status(500).json({ success: false, message: 'Falha ao gerar token de autenticação.'})
                 }
 
+                delete user.senha;
                 res.json({ success: true, message: 'Sucesso no login!', data: user, token })
 
             } else {
                 res.status(401).json({ success: false, message: 'Usuário ou senha incorretos!' })
             }
         } catch (err) {
+            console.error("Erro ao comparar senha:", err);
             res.status(500).json({ success: false, message: 'Erro ao verificar senha' })
         }
     })
 })
 
+//obter dados do usuário logado
 app.get("/me", autenticarToken, async (req, res) => {
     try {
         const [results] = await connection.promise().query(
@@ -143,10 +137,235 @@ app.get("/me", autenticarToken, async (req, res) => {
 
         return res.json({ message: "Sucesso", success: true, data: results[0] });
     } catch (err) {
+        console.error("Erro ao buscar dados do usuário /me:", err);
         return res.status(500).json({ message: "Erro", success: false, error: err.message });
     }
 });
 
+//obter dados de um usuário específico por ID (Público)
+app.get("/usuario", (req, res) => {
+    const userId = req.query.id;
+
+    if (!userId) {
+        return res.status(400).json({ success: false, message: "ID do usuário não fornecido." });
+    }
+
+    const sql = "SELECT id, nome, email, imagemPerfil FROM usuario WHERE id = ?";
+    connection.query(sql, [userId], (err, resultados) => {
+        if (err) {
+            console.error("Erro ao buscar usuário por ID:", err);
+            return res.status(500).json({ success: false, message: "Erro no servidor." });
+        }
+
+        if (resultados.length === 0) {
+            return res.status(404).json({ success: false, message: "Usuário não encontrado." });
+        }
+
+        return res.json({ success: true, data: resultados[0] });
+    });
+});
+
+//atualizar dados do usuário logado
+app.put("/usuario", autenticarToken, async (req, res) => {
+    const usuarioId = req.usuario.id;
+
+    const atualizacaoUsuarioEsquema = z.object({
+        nome: z.string().max(20, { message: "O nome deve ter no máximo 20 caracteres" }).optional(),
+        email: z.email({ message: "Formato de e-mail inválido" }).optional(),
+        senha: z.string().min(5, { message: "A senha deve ter no mínimo 5 caracteres" }).max(20, { message: "A senha deve ter no máximo 20 caracteres" }).optional(),
+    });
+
+    const validacao = atualizacaoUsuarioEsquema.safeParse(req.body);
+
+    if (!validacao.success) {
+        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    const updates = validacao.data;
+
+    if (Object.keys(updates).length === 0) {
+        return res.status(400).json({ success: false, message: "Nenhum dado para atualizar fornecido." });
+    }
+
+    let fields = [];
+    let values = [];
+
+    if (updates.nome) {
+        fields.push("nome = ?");
+        values.push(updates.nome);
+    }
+    if (updates.email) {
+        fields.push("email = ?");
+        values.push(updates.email);
+    }
+    if (updates.senha) {
+        try {
+            const senhaCriptografada = await encryptPassword(updates.senha);
+            fields.push("senha = ?");
+            values.push(senhaCriptografada);
+        } catch (error) {
+            console.error("Erro ao criptografar senha:", error);
+            return res.status(500).json({ success: false, message: "Erro ao processar a nova senha!" });
+        }
+    }
+    
+    values.push(usuarioId);
+
+    const query = `UPDATE usuario SET ${fields.join(', ')} WHERE id = ?`;
+
+    connection.query(query, values, (err, result) => {
+        if (err) {
+            console.error("Erro ao atualizar usuário:", err);
+            return res.status(500).json({success: false, message: "Erro ao editar usuário!",});
+        }
+        if (result.affectedRows === 0) {
+            return res.status(404).json({success: false, message: "Usuário não encontrado ou não autorizado.",});
+        }
+
+        res.json({success: true, message: "Usuário editado com sucesso!", data: { id: usuarioId } });
+    });
+});
+
+//wxcluir o próprio usuário
+app.delete("/usuario", autenticarToken, (req, res) => {
+    const id = req.usuario.id;
+    const query = "DELETE FROM usuario WHERE id = ?";
+
+    connection.query(query, [id], (err, result) => {
+        if (err) {
+            console.error("Erro ao deletar usuário:", err);
+            return res.status(500).json({success: false, message: "Erro ao excluir usuário!",});
+        }
+
+        res.json({success: true, message: "Usuário excluído com sucesso!", data: result,
+        });
+    });
+})
+
+//total de likes recebidos pelo usuário
+app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+
+        const query = `
+            SELECT 
+                COUNT(l.id) AS totalLikes 
+            FROM 
+                likes l
+            JOIN 
+                fotografia f ON l.post_id = f.id
+            WHERE 
+                f.autor_id = ?;
+        `;
+
+        const [results] = await connection.promise().query(query, [userId]);
+        const totalLikes = results[0].totalLikes || 0;
+
+        return res.json({ 
+            success: true, 
+            message: 'Total de likes listado com sucesso', 
+            totalLikes: totalLikes 
+        });
+
+    } catch (err) {
+        console.error('Erro ao buscar total de likes recebidos:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar total de likes', 
+            error: err.message 
+        });
+    }
+});
+
+//total de posts que o usuário salvou
+app.get("/usuario/stats/meus-salvos", autenticarToken, async (req, res) => {
+    try {
+        const userId = req.usuario.id;
+
+        const query = `
+            SELECT 
+                COUNT(f.id) AS totalSalvos 
+            FROM 
+                favorites f
+            WHERE 
+                f.user_id = ?;
+        `;
+
+        const [results] = await connection.promise().query(query, [userId]);
+        const totalSalvos = results[0].totalSalvos || 0;
+
+        return res.json({ 
+            success: true, 
+            message: 'Total de salvos listado com sucesso', 
+            totalSalvos: totalSalvos 
+        });
+
+    } catch (err) {
+        console.error('Erro ao buscar total de salvos:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar total de salvos', 
+            error: err.message 
+        });
+    }
+});
+
+//ROTAS DA FOTOGRAFIA
+
+//postagem das fotografias
+app.post('/fotos/postagem', autenticarToken, upload.single('url'), (req, res) => {
+    const autor_id = req.usuario.id
+    const { descricao } = req.body
+    const imagePath = req.file ? `/assets/${req.file.filename}` : null
+
+    if (!imagePath) {
+         return res.status(400).json({ success: false, message: 'O arquivo de imagem é obrigatório.' });
+    }
+    
+    const query = 'INSERT INTO fotografia (descricao, url, autor_id) VALUES (?, ?, ?)'
+
+    connection.query(query, [descricao, imagePath, autor_id], (err, result) => {
+        if (err) {
+            console.error('Erro ao salvar o post:', err)
+            return res.status(500).json({ success: false, message: 'Erro ao criar post' })
+        }
+        res.status(201).json({ success: true, message: 'Post criado com sucesso', id: result.insertId })
+    })
+})
+
+//lista todas as fotos (la do explorar)
+app.get("/fotos", async (req, res) => {
+    try {
+        const query = `SELECT 
+                f.id, 
+                f.url, 
+                f.descricao, 
+                u.nome AS autorNome,
+                u.id AS autorId
+            FROM 
+                fotografia f 
+            JOIN 
+                usuario u ON f.autor_id = u.id 
+        `;
+
+        const [results] = await connection.promise().query(query);
+
+        return res.json({ 
+            success: true, 
+            message: 'Fotos listadas com sucesso', 
+            data: results 
+        });
+    } catch (err) {
+        console.error('Erro ao buscar todas as fotos:', err);
+        return res.status(500).json({ 
+            success: false, 
+            message: 'Erro interno ao buscar as fotos', 
+            error: err.message 
+        });
+    }
+});
+
+//lista fotos do usuário logado
 app.get("/fotos/minhas", autenticarToken, async (req, res) => { 
     try {
         const autor_id = req.usuario.id
@@ -157,42 +376,48 @@ app.get("/fotos/minhas", autenticarToken, async (req, res) => {
 
         return res.json({ success: true, message: 'fotos do usuário listadas com sucesso', data: results })
     } catch (err) {
-        console.log('Erro ao buscar fotos do usuário', err)
+        console.error('Erro ao buscar fotos do usuário logado:', err)
         return res.status(500).json({ success: false, message: 'erro ao buscar fotos do usuário', error: err.message })
     }
 })
 
-// Adicione a função de decodificar token, ou importe
-// const jwt = require('jsonwebtoken'); // Exemplo
-// const SECRET = 'seu_segredo'; // Exemplo
+//lista fotos de um usuário específico por ID
+app.get("/fotos/usuario", (req, res) => {
+    const userId = req.query.id;
+    
+    if (!userId) {
+         return res.status(400).json({ success: false, message: 'ID do usuário é obrigatório.' });
+    }
 
-// ... (código anterior do backend) ...
+    const sql = "SELECT * FROM fotografia WHERE autor_id = ?";
+    connection.query(sql, [userId], (err, resultados) => {
+        if (err) {
+            console.error("Erro ao buscar fotos do usuário:", err);
+            return res.status(500).json({ success: false, message: "Erro ao buscar fotos" });
+        }
 
-// **NOTA:** Você deve ter 'jsonwebtoken' importado e 'SECRET' definido
-// const jwt = require('jsonwebtoken');
-// const SECRET = 'sua_chave_secreta_aqui';
+        res.json({ success: true, data: resultados });
+    });
+});
 
+//obter detalhes de uma única foto, incluindo status de like/salvo pelo usuário logado
 app.get("/fotos/:id", async (req, res) => {
-    // 1. Tenta obter o token e decodificar o ID do usuário
-    let loggedUserId = 0; // Padrão: 0 (para consultas de like/save)
+    let loggedUserId = 0;
     const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1]; // Assume 'Bearer <token>'
+    const token = authHeader && authHeader.split(' ')[1];
 
     if (token) {
         try {
-            // **DECODIFICA O TOKEN AQUI**
-            const decoded = jwt.verify(token, SECRET); // Use sua chave secreta real
+            const decoded = jwt.verify(token, SECRET); 
             loggedUserId = decoded.id; 
         } catch (error) {
-            // Token inválido, continua como não logado (loggedUserId = 0)
-            console.warn("Token de autenticação fornecido é inválido ou expirou.", error.message);
+            console.warn("Token de autenticação fornecido é inválido ou expirou. Continuando como não logado.", error.message);
         }
     }
     
     try {
         const { id } = req.params;
         
-        // A lógica de consulta permanece a mesma, mas agora usa o 'loggedUserId'
         const query = ` 
             SELECT 
                 f.id, 
@@ -225,7 +450,6 @@ app.get("/fotos/:id", async (req, res) => {
                 f.id, f.titulo, f.descricao, f.url, f.media_avaliacao, u.nome, u.imagemPerfil;
         `;
 
-        // Os parâmetros da query agora usam a variável 'loggedUserId'
         const [results] = await connection.promise().query(query, [loggedUserId, loggedUserId, loggedUserId, loggedUserId, id]);
         
         if (results.length === 0) {
@@ -239,93 +463,153 @@ app.get("/fotos/:id", async (req, res) => {
     }
 });
 
-app.get("/usuario", async (req, res) => {
-    try {
-        const userId = req.query.id;
+//atualizar foto (apenas descrição e/ou imagem)
+app.put('/fotografia/:id', autenticarToken, upload.single('url'), async (req, res) => {
+    const { id } = req.params;
+    const { descricao } = req.body;
+    const url = req.file ? `/assets/${req.file.filename}` : undefined;
+    const usuarioId = req.usuario.id
 
-        if (!userId) {
-            return res.status(400).json({
-                success: false,
-                message: "ID do usuário não fornecido."
-            });
+    let fields = [];
+    let values = [];
+
+    if (url) {
+        fields.push("url = ?");
+        values.push(url);
+    }
+    if (descricao !== undefined) {
+        fields.push("descricao = ?");
+        values.push(descricao);
+    }
+
+    if (fields.length === 0) {
+        return res.status(400).json({ success: false, message: 'Nenhum dado para atualização fornecido.' });
+    }
+
+    values.push(id, usuarioId);
+
+    try {
+        const sql = `
+            UPDATE fotografia 
+            SET ${fields.join(', ')}
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, values);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Fotografia não encontrada ou você não é o autor.' });
         }
 
-        const sql = "SELECT id, nome, email, imagemPerfil FROM usuario WHERE id = ?";
-        connection.query(sql, [userId], (err, resultados) => {
-            if (err) return res.status(500).json({ success: false, message: "Erro no servidor." });
-
-            if (resultados.length === 0) {
-                return res.status(404).json({
-                    success: false,
-                    message: "Usuário não encontrado."
-                });
-            }
-
-            return res.json({
-                success: true,
-                data: resultados[0]
-            });
-        });
+        return res.json({ success: true, message: "Fotografia atualizada com sucesso!" });
 
     } catch (error) {
-        return res.status(500).json({ success: false, message: "Erro ao buscar usuário." });
+        console.error("Erro ao atualizar fotografia:", error);
+        return res.status(500).json({ success: false, message: "Erro ao atualizar fotografia", error });
     }
 });
 
-app.get("/fotos/usuario", (req, res) => {
-    const userId = req.query.id;
+//excluir foto
+app.delete('/fotografia/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params;
+    const usuarioId = req.usuario.id;
 
-    const sql = "SELECT * FROM fotografia WHERE autor_id = ?";
-    connection.query(sql, [userId], (err, resultados) => {
-        if (err) return res.status(500).json({ success: false, message: "Erro ao buscar fotos" });
+    try {
+        const sql = `
+            DELETE FROM fotografia
+            WHERE id = ? AND autor_id = ?
+        `;
 
-        res.json({ success: true, data: resultados });
-    });
-});
+        const [result] = await connection.promise().query(sql, [id, usuarioId]);
 
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Fotografia não encontrada ou você não é o autor." });
+        }
 
-app.put("/usuario", autenticarToken, (req, res) => {
-    const cadastroUsuarioEsquema = z.object({
-        nome: z.string().max(20, { message: "O nome deve ter no máximo 20 caracteres" }),
-        email: z.email({ message: "Formato de e-mail inválido" }),
-        senha: z.string().min(5, { message: "A senha deve ter no mínimo 5 caracteres" }).max(20, { message: "A senha deve ter no máximo 20 caracteres" }),
-    });
+        return res.json({ success: true, message: "Fotografia excluída com sucesso!" });
 
-    const validacao = cadastroUsuarioEsquema.safeParse(req.body);
-
-    if (!validacao.success) {
-        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    } catch (error) {
+        console.error("Erro ao deletar fotografia:", error);
+        return res.status(500).json({ success: false, message: "Erro ao excluir fotografia", error });
     }
+});
 
-    const id = req.usuario.id;
-    const { nome, email, senha } = validacao.data;
 
-    const query = "UPDATE usuario SET nome = ?, email = ?, senha = ? WHERE id = ?";
+//ROTAS DE INTERAÇÕES COM A FOTOGRAFIA
 
-    connection.query(query, [nome, email, senha, id], (err, result) => {
+//adicionar ou remover like
+app.post("/fotos/:postId/like", autenticarToken, (req, res) => {
+    const { postId } = req.params;
+    const userId = req.usuario.id;
+
+    const checkQuery = 'SELECT id FROM likes WHERE post_id = ? AND user_id = ?';
+    connection.query(checkQuery, [postId, userId], (err, results) => {
         if (err) {
-            return res.status(500).json({success: false, err, message: "Erro ao editar usuário!",});
+            console.error('Erro no servidor (check like):', err);
+            return res.status(500).json({ success: false, message: 'Erro no servidor' });
         }
 
-        res.json({success: true, message: "Usuário editado com sucesso!", data: result,
-        });
+        if (results.length > 0) {
+            // REMOVER (Dislike)
+            const deleteQuery = 'DELETE FROM likes WHERE post_id = ? AND user_id = ?';
+            connection.query(deleteQuery, [postId, userId], (err) => {
+                if (err) {
+                    console.error('Erro ao remover like:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao remover like' });
+                }
+                return res.json({ success: true, liked: false, message: 'Like removido' });
+            });
+        } else {
+            // INSERIR (Like)
+            const insertQuery = 'INSERT INTO likes (post_id, user_id) VALUES (?, ?)';
+            connection.query(insertQuery, [postId, userId], (err) => {
+                if (err) {
+                    console.error('Erro ao adicionar like:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao adicionar like' });
+                }
+                return res.status(201).json({ success: true, liked: true, message: 'Like adicionado' });
+            });
+        }
+    });
+});
+  
+//adicionar ou remover favorito (Salvar)
+app.post("/fotos/:postId/favorite", autenticarToken, (req, res) => {
+    const { postId } = req.params;
+    const userId = req.usuario.id;
+
+    const checkQuery = 'SELECT id FROM favorites WHERE post_id = ? AND user_id = ?';
+    connection.query(checkQuery, [postId, userId], (err, results) => {
+        if (err) {
+            console.error('Erro no servidor (check saves):', err);
+            return res.status(500).json({ success: false, message: 'Erro no servidor' });
+        }
+
+        if (results.length > 0) {
+            // REMOVER (Unsave)
+            const deleteQuery = 'DELETE FROM favorites WHERE post_id = ? AND user_id = ?';
+            connection.query(deleteQuery, [postId, userId], (err) => {
+                if (err) {
+                    console.error('Erro ao remover salvamento:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao remover salvamento' });
+                }
+                return res.json({ success: true, saved: false, message: 'Salvamento removido' });
+            });
+        } else {
+            // INSERIR (Save)
+            const insertQuery = 'INSERT INTO favorites (post_id, user_id) VALUES (?, ?)';
+            connection.query(insertQuery, [postId, userId], (err) => {
+                if (err) {
+                    console.error('Erro ao adicionar salvamento:', err);
+                    return res.status(500).json({ success: false, message: 'Erro ao adicionar salvamento' });
+                }
+                return res.status(201).json({ success: true, saved: true, message: 'Salvamento adicionado' });
+            });
+        }
     });
 });
 
-app.delete("/usuario", autenticarToken, (req, res) => {
-    const id = req.usuario.id;
-    const query = "DELETE FROM usuario WHERE id = ?";
-
-    connection.query(query, [id], (err, result) => {
-        if (err) {
-            return res.status(500).json({success: false, err, message: "Erro ao excluir usuário!",});
-        }
-
-        res.json({success: true, message: "Usuário excluído com sucesso!", data: result,
-        });
-    });
-})
-
+//adicionar novo comentário
 app.post("/fotos/:id/comentar", autenticarToken, async (req, res) => {
     const comentarioEsquema = z.object({
         texto: z.string().max(255, { message: 'O comentário deve ter no máximo 255 caracteres' }).min(1, { message: 'O comentário não pode ser vazio' })
@@ -353,12 +637,13 @@ app.post("/fotos/:id/comentar", autenticarToken, async (req, res) => {
     }
 });
 
+//listar comentários de uma foto
 app.get("/fotos/:id/comentarios", async (req, res) => {
     try {
         const { id } = req.params;
 
         const query = `
-            SELECT c.id, c.texto, c.criadoEm, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil
+            SELECT c.id, c.texto, c.criadoEm, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil, u.id AS autorId
             FROM comentario c
             JOIN usuario u ON c.autor_id = u.id
             WHERE c.fotografia = ?
@@ -369,119 +654,255 @@ app.get("/fotos/:id/comentarios", async (req, res) => {
 
         return res.json({ success: true, message: 'Comentários listados com sucesso', data: results });
     } catch (err) {
-        console.log('Erro ao buscar comentários', err);
+        console.error('Erro ao buscar comentários:', err);
         return res.status(500).json({ success: false, message: 'Erro ao buscar comentários', error: err.message });
     }
 });
 
-app.post("/fotos/:postId/like", autenticarToken, (req, res) => {
-    const { postId } = req.params;
-    const userId = req.usuario.id; // Usuário autenticado pelo middleware
+//excluir comentário (apenas pelo autor)
+app.delete('/comentarios/:id', autenticarToken, async (req, res) => {
+    const comentarioId = req.params.id;
+    const usuarioId = req.usuario.id;
 
-    // 1. Verificar se o like já existe
-    const checkQuery = 'SELECT * FROM likes WHERE post_id = ? AND user_id = ?';
-    connection.query(checkQuery, [postId, userId], (err, results) => {
-        if (err) {
-            console.error('Erro no servidor (check like):', err);
-            return res.status(500).json({ success: false, message: 'Erro no servidor' });
-        }
-
-        if (results.length > 0) {
-            // Se o like existe: REMOVER (Dislike)
-            const deleteQuery = 'DELETE FROM likes WHERE post_id = ? AND user_id = ?';
-            connection.query(deleteQuery, [postId, userId], (err) => {
-                if (err) {
-                    console.error('Erro ao remover like:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao remover like' });
-                }
-                // Retorna que o like foi removido
-                return res.json({ success: true, liked: false, message: 'Like removido' });
-            });
-        } else {
-            // Se o like não existe: INSERIR (Like)
-            const insertQuery = 'INSERT INTO likes (post_id, user_id) VALUES (?, ?)';
-            connection.query(insertQuery, [postId, userId], (err) => {
-                if (err) {
-                    console.error('Erro ao adicionar like:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao adicionar like' });
-                }
-                // Retorna que o like foi adicionado
-                return res.status(201).json({ success: true, liked: true, message: 'Like adicionado' });
-            });
-        }
-    });
-});
-  
-  app.post("/fotos/:postId/favorite", autenticarToken, async (req, res) => {
-    const { postId } = req.params;
-    const userId = req.usuario.id;
-  
-    const checkQuery = 'SELECT * FROM favorites WHERE post_id = ? AND user_id = ?';
-    connection.query(checkQuery, [postId, userId], (err, results) => {
-        if (err) {
-            console.error('Erro no servidor (check saves):', err);
-            return res.status(500).json({ success: false, message: 'Erro no servidor' });
-        }
-
-        if (results.length > 0) {
-            const deleteQuery = 'DELETE FROM favorites WHERE post_id = ? AND user_id = ?';
-            connection.query(deleteQuery, [postId, userId], (err) => {
-                if (err) {
-                    console.error('Erro ao remover salvamento:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao remover salvamento' });
-                }
-                return res.json({ success: true, saved: false, message: 'Salvamento removido' });
-            });
-        } else {
-            const insertQuery = 'INSERT INTO favorites (post_id, user_id) VALUES (?, ?)';
-            connection.query(insertQuery, [postId, userId], (err) => {
-                if (err) {
-                    console.error('Erro ao adicionar salvamento:', err);
-                    return res.status(500).json({ success: false, message: 'Erro ao adicionar salvamento' });
-                }
-                return res.status(201).json({ success: true, saved: true, message: 'Salvamento adicionado' });
-            });
-        }
-    });
-  });
-
-  
-  app.get("/fotos", async (req, res) => {
     try {
-        const query = `SELECT 
-                f.id, 
-                f.url, 
-                f.descricao, 
-                u.nome AS autorNome,
-                u.id AS autorId
-            FROM 
-                fotografia f 
-            JOIN 
-                usuario u ON f.autor_id = u.id 
-            ORDER BY 
-                f.id DESC; 
-        `;
+        // Exclui diretamente, checando se o autor_id corresponde
+        const queryDelete = 'DELETE FROM comentario WHERE id = ? AND autor_id = ?';
+        const [result] = await connection.promise().query(queryDelete, [comentarioId, usuarioId]);
 
-        const [results] = await connection.promise().query(query);
+        if (result.affectedRows === 0) {
+            // Se affectedRows for 0, ou o comentário não existe (404) ou o usuário não é o autor (403)
+            // Para não revelar muita informação, usamos 404/403 dependendo da checagem
+            const queryBusca = 'SELECT autor_id FROM comentario WHERE id = ?';
+            const [resultBusca] = await connection.promise().query(queryBusca, [comentarioId]);
 
-        return res.json({ 
-            success: true, 
-            message: 'Fotos listadas com sucesso', 
-            data: results 
-        });
-    } catch (err) {
-        console.error('Erro ao buscar todas as fotos:', err);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Erro interno ao buscar as fotos', 
-            error: err.message 
-        });
+            if (resultBusca.length === 0) {
+                return res.status(404).json({ success: false, message: 'Comentário não encontrado.' });
+            } else {
+                 return res.status(403).json({ success: false, message: 'Você não tem permissão para excluir este comentário.' });
+            }
+        }
+
+        return res.json({ success: true, message: 'Comentário excluído com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao excluir comentário:', error);
+        return res.status(500).json({ success: false, message: 'Erro interno ao excluir comentário.', error: error.message });
     }
 });
 
+//8 fotos mais curtidas
+app.get('/fotos/maisCurtidas', async (req, res) => {
+    try {
+        const [results] = await connection.promise().query(`
+            SELECT 
+                f.id,
+                f.url,
+                f.descricao,
+                u.nome AS autorNome,
+                u.imagemPerfil AS autorImagemPerfil,
+                COUNT(l.id) AS totalCurtidas
+            FROM fotografia f
+            JOIN usuario u ON f.autor_id = u.id
+            LEFT JOIN likes l ON f.id = l.post_id
+            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
+            ORDER BY totalCurtidas DESC
+            LIMIT 8
+        `);
+
+        res.json({ success: true, fotos: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais curtidas' });
+    }
+});
+
+//8 fotos mais salvas
+app.get('/fotos/maisSalvas', async (req, res) => {
+    try {
+        const [results] = await connection.promise().query(`
+            SELECT 
+                f.id,
+                f.url,
+                f.descricao,
+                u.nome AS autorNome,
+                u.imagemPerfil AS autorImagemPerfil,
+                COUNT(fav.id) AS totalSalvos
+            FROM fotografia f
+            JOIN usuario u ON f.autor_id = u.id
+            LEFT JOIN favorites fav ON f.id = fav.post_id
+            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
+            ORDER BY totalSalvos DESC
+            LIMIT 8
+        `);
+
+        res.json({ success: true, fotos: results });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais salvas' });
+    }
+});
+
+
+//ROTAS DE ARTIGOS
+
+//publicar novo artigo (Upload da imagem de capa)
+app.post('/artigos/publicar', autenticarToken, upload.single('imagemArtigo'), async (req, res) => {
+    const ArtigoEsquema = z.object({
+        titulo: z.string().min(1, { message: 'O título é obrigatório.' }).max(255),
+        categoria: z.enum(["tecnica", "historia", "curiosidade"], { message: 'Categoria inválida.' }),
+        conteudo: z.string().min(1, { message: 'O conteúdo é obrigatório.' })
+    });
+
+    const validacao = ArtigoEsquema.safeParse(req.body);
+
+    if (!validacao.success) {
+        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
+    }
+
+    if (!req.file) {
+        return res.status(400).json({ success: false, error: 'A imagem de capa é obrigatória.' });
+    }
+
+    try {
+        const autor_id = req.usuario.id;
+        const { titulo, categoria, conteudo } = validacao.data;
+        const imagemArtigoPath = `/assets/${req.file.filename}`;
+        
+        const query = 'INSERT INTO artigo (titulo, conteudo, categoria, autor_id, imagemArtigo) VALUES (?, ?, ?, ?, ?)';
+
+        const [result] = await connection.promise().query(query, [titulo, conteudo, categoria, autor_id, imagemArtigoPath]);
+
+        return res.status(201).json({ success: true, message: 'Artigo publicado com sucesso!', id: result.insertId });
+    } catch (err) {
+        console.error('Erro ao publicar artigo:', err);
+        // Em caso de falha no DB, você também deveria deletar o arquivo
+        return res.status(500).json({ success: false, message: 'Erro interno ao publicar artigo', error: err.message });
+    }
+});
+
+//listar todos os artigos
+app.get('/artigos', async (req, res) => {
+    try {
+        const query = `
+            SELECT 
+                artigo.id,
+                artigo.titulo,
+                SUBSTRING(artigo.conteudo, 1, 200) AS conteudo, -- Retorna apenas uma prévia do conteúdo
+                artigo.categoria,
+                artigo.imagemArtigo,
+                artigo.criadoEm,
+                usuario.nome AS autorNome,
+                usuario.id AS autorId
+            FROM artigo
+            JOIN usuario ON usuario.id = artigo.autor_id
+            ORDER BY artigo.criadoEm DESC;
+        `;
+
+        const [rows] = await connection.promise().query(query);
+        return res.status(200).json({ success: true, artigos: rows });
+
+    } catch (err) {
+        console.error('Erro ao buscar artigos:', err);
+        return res.status(500).json({ success: false, error: 'Erro ao buscar artigos.' });
+    }
+});
+
+//obter detalhes de um único artigo
+app.get('/artigos/:id', async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const query = `
+            SELECT 
+                artigo.id,
+                artigo.titulo,
+                artigo.conteudo,
+                artigo.categoria,
+                artigo.imagemArtigo,
+                artigo.criadoEm,
+                usuario.id AS autorId,
+                usuario.nome AS autorNome
+            FROM artigo
+            JOIN usuario ON usuario.id = artigo.autor_id
+            WHERE artigo.id = ?
+        `;
+
+        const [results] = await connection.promise().query(query, [id]);
+
+        if (results.length === 0) {
+            return res.status(404).json({ success: false, message: 'Artigo não encontrado' });
+        }
+
+        return res.json({ success: true, artigo: results[0] });
+
+    } catch (err) {
+        console.error('Erro ao buscar artigo por ID:', err);
+        return res.status(500).json({ success: false, message: 'Erro ao carregar artigo' });
+    }
+});
+
+//atualizar artigo (apenas pelo autor)
+app.put('/artigos/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params;
+    const { titulo, conteudo} = req.body;
+    const usuarioId = req.usuario.id
+
+    if (!titulo && !conteudo) {
+         return res.status(400).json({ success: false, message: 'Título e/ou conteúdo são obrigatórios para a atualização.' });
+    }
+    
+    try {
+        const sql = `
+            UPDATE artigo 
+            SET titulo = ?, conteudo = ?
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, [titulo, conteudo, id, usuarioId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: 'Artigo não encontrado ou você não é o autor.' });
+        }
+
+        return res.json({ success: true, message: "Artigo atualizado com sucesso!" });
+
+    } catch (error) {
+        console.error("Erro ao atualizar artigo:", error);
+        return res.status(500).json({ success: false, message: "Erro ao atualizar artigo", error });
+    }
+});
+
+//excluir artigo (apenas pelo autor)
+app.delete('/artigos/:id', autenticarToken, async (req, res) => {
+    const { id } = req.params;
+    const usuarioId = req.usuario.id;
+
+    try {
+        const sql = `
+            DELETE FROM artigo
+            WHERE id = ? AND autor_id = ?
+        `;
+
+        const [result] = await connection.promise().query(sql, [id, usuarioId]);
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ success: false, message: "Artigo não encontrado ou você não é o autor." });
+        }
+
+        return res.json({ success: true, message: "Artigo excluído com sucesso!" });
+
+    } catch (error) {
+        console.error("Erro ao deletar artigo:", error);
+        return res.status(500).json({ success: false, message: "Erro ao excluir artigo", error });
+    }
+});
+
+
+//ROTAS DE FEEDBACK
+
+//enviar um novo feedback
 app.post("/feedback", autenticarToken, async (req, res) => {
     const feedbackEsquema = z.object({
-        texto: z.string().max(500, { message: 'O feedback deve ter no máximo 265 caracteres' }).min(1, { message: 'O feedback não pode ser vazio' })
+        texto: z.string().max(500, { message: 'O feedback deve ter no máximo 500 caracteres' }).min(1, { message: 'O feedback não pode ser vazio' })
     });
 
     const validacao = feedbackEsquema.safeParse(req.body);
@@ -505,6 +926,7 @@ app.post("/feedback", autenticarToken, async (req, res) => {
     }
 });
 
+//listar todos os feedbacks
 app.get("/feedbacks", autenticarToken, async (req, res) => {
     try {
         const query = `
@@ -538,347 +960,6 @@ app.get("/feedbacks", autenticarToken, async (req, res) => {
         });
     }
 });
-
-app.get("/usuario/stats/meus-likes", autenticarToken, async (req, res) => {
-    try {
-        const userId = req.usuario.id;
-
-        const query = `
-            SELECT 
-                COUNT(l.id) AS totalLikes 
-            FROM 
-                likes l
-            JOIN 
-                fotografia f ON l.post_id = f.id
-            WHERE 
-                f.autor_id = ?;
-        `;
-
-        const [results] = await connection.promise().query(query, [userId]);
-
-        const totalLikes = results[0].totalLikes || 0;
-
-        return res.json({ 
-            success: true, 
-            message: 'Total de likes listado com sucesso', 
-            totalLikes: totalLikes 
-        });
-
-    } catch (err) {
-        console.error('Erro ao buscar total de likes:', err);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Erro interno ao buscar total de likes', 
-            error: err.message 
-        });
-    }
-});
-
-app.get("/usuario/stats/meus-salvos", autenticarToken, async (req, res) => {
-    try {
-        const userId = req.usuario.id;
-
-        const query = `
-            SELECT 
-                COUNT(f.id) AS totalSalvos 
-            FROM 
-                favorites f
-            WHERE 
-                f.user_id = ?;
-        `;
-
-        const [results] = await connection.promise().query(query, [userId]);
-
-        const totalSalvos = results[0].totalSalvos || 0;
-
-        return res.json({ 
-            success: true, 
-            message: 'Total de salvos listado com sucesso', 
-            totalSalvos: totalSalvos 
-        });
-
-    } catch (err) {
-        console.error('Erro ao buscar total de salvos:', err);
-        return res.status(500).json({ 
-            success: false, 
-            message: 'Erro interno ao buscar total de salvos', 
-            error: err.message 
-        });
-    }
-});
-
-app.post('/artigos/publicar', autenticarToken, upload.single('imagemArtigo'), async (req, res) => {
-    const ArtigoEsquema = z.object({
-        titulo: z.string().min(1, { message: 'O título é obrigatório.' }).max(255),
-        categoria: z.enum(["tecnica", "historia", "curiosidade"], { message: 'Categoria inválida.' }),
-        conteudo: z.string().min(1, { message: 'O conteúdo é obrigatório.' })
-    });
-
-    const validacao = ArtigoEsquema.safeParse(req.body);
-
-    if (!validacao.success) {
-        if (req.file) {
-            console.log(`Arquivo ${req.file.filename} excluído devido a falha de validação de texto.`);
-        }
-        return res.status(400).json({ success: false, error: validacao.error.issues[0].message });
-    }
-
-    if (!req.file) {
-        return res.status(400).json({ success: false, error: 'A imagem de capa é obrigatória.' });
-    }
-
-    try {
-        const autor_id = req.usuario.id;
-        const { titulo, categoria, conteudo } = validacao.data;
-        const imagemArtigoPath = `/assets/${req.file.filename}`;
-        
-        const query = 'INSERT INTO artigo (titulo, conteudo, categoria, autor_id, imagemArtigo) VALUES (?, ?, ?, ?, ?)';
-
-        const [result] = await connection.promise().query(query, [titulo, conteudo, categoria, autor_id, imagemArtigoPath]);
-
-        return res.status(201).json({ success: true, message: 'Artigo publicado com sucesso!', id: result.insertId });
-    } catch (err) {
-        console.error('Erro ao publicar artigo:', err);
-        if (req.file) {
-            console.log(`Arquivo ${req.file.filename} excluído devido a erro no banco de dados.`);
-        }
-        return res.status(500).json({ success: false, message: 'Erro interno ao publicar artigo', error: err.message });
-    }
-});
-
-app.get('/artigos', async (req, res) => {
-    try {
-        const query = `
-            SELECT 
-                artigo.id,
-                artigo.titulo,
-                artigo.conteudo,
-                artigo.categoria,
-                artigo.imagemArtigo,
-                artigo.criadoEm,
-                usuario.nome AS autorNome,
-                usuario.id AS autorId
-            FROM artigo
-            JOIN usuario ON usuario.id = artigo.autor_id
-            ORDER BY artigo.criadoEm DESC;
-        `;
-
-        const [rows] = await connection.promise().query(query);
-        return res.status(200).json({ success: true, artigos: rows });
-
-    } catch (err) {
-        console.error('Erro ao buscar artigos:', err);
-        return res.status(500).json({ success: false, error: 'Erro ao buscar artigos.' });
-    }
-});
-
-app.get('/artigos/:id', async (req, res) => {
-    const { id } = req.params;
-
-    try {
-        const query = `
-            SELECT 
-                artigo.id,
-                artigo.titulo,
-                artigo.conteudo,
-                artigo.categoria,
-                artigo.imagemArtigo,
-                artigo.criadoEm,
-                usuario.id AS autorId,
-                usuario.nome AS autorNome
-            FROM artigo
-            JOIN usuario ON usuario.id = artigo.autor_id
-            WHERE artigo.id = ?
-        `;
-
-        const [results] = await connection.promise().query(query, [id]);
-
-        if (results.length === 0) {
-            return res.status(404).json({ success: false, message: 'Artigo não encontrado' });
-        }
-
-        return res.json({ success: true, artigo: results[0] });
-
-    } catch (err) {
-        return res.status(500).json({ success: false, message: 'Erro ao carregar artigo' });
-    }
-});
-
-app.put('/artigos/:id', autenticarToken, async (req, res) => {
-    const { id } = req.params;
-    const { titulo, conteudo} = req.body;
-    const usuarioId = req.usuario.id
-
-    try {
-        const sql = `
-            UPDATE artigo 
-            SET titulo = ?, conteudo = ?
-            WHERE id = ? AND autor_id = ?
-        `;
-
-        const [result] = await connection.promise().query(sql, [titulo, conteudo, id, usuarioId]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ success: false, message: 'Artigo não encontrado' });
-        }
-
-        return res.json({ success: true, message: "Artigo atualizado com sucesso!" });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Erro ao atualizar artigo", error });
-    }
-});
-
-app.delete('/artigos/:id', autenticarToken, async (req, res) => {
-    const { id } = req.params;
-    const usuarioId = req.usuario.id;
-
-    try {
-        const sql = `
-            DELETE FROM artigo
-            WHERE id = ? AND autor_id = ?
-        `;
-
-        const [result] = await connection.promise().query(sql, [id, usuarioId]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ success: false, message: "Artigo não encontrado ou você não é o autor." });
-        }
-
-        return res.json({ success: true, message: "Artigo excluído com sucesso!" });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Erro ao excluir artigo", error });
-    }
-});
-
-app.put('/fotografia/:id', autenticarToken, upload.single('url'), async (req, res) => {
-    const { id } = req.params;
-    const url = req.file ? `/assets/${req.file.filename}` : null;
-    const { descricao } = req.body;
-    const usuarioId = req.usuario.id
-
-    try {
-        const sql = `
-            UPDATE fotografia 
-            SET url = ?, descricao = ?
-            WHERE id = ? AND autor_id = ?
-        `;
-
-        const [result] = await connection.promise().query(sql, [url, descricao, id, usuarioId]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ success: false, message: 'Fotografia não encontrada' });
-        }
-
-        return res.json({ success: true, message: "Fotografia atualizada com sucesso!" });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Erro ao atualizar fotografia", error });
-    }
-});
-
-app.delete('/fotografia/:id', autenticarToken, async (req, res) => {
-    const { id } = req.params;
-    const usuarioId = req.usuario.id;
-
-    try {
-        const sql = `
-            DELETE FROM fotografia
-            WHERE id = ? AND autor_id = ?
-        `;
-
-        const [result] = await connection.promise().query(sql, [id, usuarioId]);
-
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ success: false, message: "Fotografia não encontrada ou você não é o autor." });
-        }
-
-        return res.json({ success: true, message: "Fotografia excluída com sucesso!" });
-
-    } catch (error) {
-        return res.status(500).json({ success: false, message: "Erro ao excluir fotografia", error });
-    }
-});
-
-app.delete('/comentarios/:id', autenticarToken, async (req, res) => {
-    const comentarioId = req.params.id;
-    const usuarioId = req.usuario.id;
-
-    try {
-        const queryBusca = 'SELECT * FROM comentario WHERE id = ?';
-        const [resultBusca] = await connection.promise().query(queryBusca, [comentarioId]);
-
-        if (resultBusca.length === 0) {
-            return res.status(404).json({ success: false, message: 'Comentário não encontrado.' });
-        }
-
-        const comentario = resultBusca[0];
-
-        if (comentario.autor_id !== usuarioId) {
-            return res.status(403).json({ success: false, message: 'Você não tem permissão para excluir este comentário.' });
-        }
-
-        const queryDelete = 'DELETE FROM comentario WHERE id = ?';
-        await connection.promise().query(queryDelete, [comentarioId]);
-
-        return res.json({ success: true, message: 'Comentário excluído com sucesso.' });
-    } catch (error) {
-        console.error('Erro ao excluir comentário:', error);
-        return res.status(500).json({ success: false, message: 'Erro interno ao excluir comentário.', error: error.message });
-    }
-});
-
-app.get('/fotos/maisCurtidas', async (req, res) => {
-    try {
-        const [results] = await connection.promise().query(`
-            SELECT 
-                f.id,
-                f.url,
-                f.descricao,
-                u.nome AS autorNome,
-                u.imagemPerfil AS autorImagemPerfil,
-                COUNT(l.id) AS totalCurtidas
-            FROM fotografia f
-            JOIN usuario u ON f.autor_id = u.id
-            LEFT JOIN likes l ON f.id = l.post_id
-            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
-            ORDER BY totalCurtidas DESC
-            LIMIT 8
-        `);
-
-        res.json({ success: true, fotos: results });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais curtidas' });
-    }
-});
-
-app.get('/fotos/maisSalvas', async (req, res) => {
-    try {
-        const [results] = await connection.promise().query(`
-            SELECT 
-                f.id,
-                f.url,
-                f.descricao,
-                u.nome AS autorNome,
-                u.imagemPerfil AS autorImagemPerfil,
-                COUNT(fav.id) AS totalSalvos
-            FROM fotografia f
-            JOIN usuario u ON f.autor_id = u.id
-            LEFT JOIN favorites fav ON f.id = fav.post_id
-            GROUP BY f.id, f.url, f.descricao, u.nome, u.imagemPerfil
-            ORDER BY totalSalvos DESC
-            LIMIT 8
-        `);
-
-        res.json({ success: true, fotos: results });
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ success: false, message: 'Erro interno ao buscar fotos mais salvas' });
-    }
-});
-
 
 app.listen(port, () => {
     console.log(`Servidor rodando na porta ${port}`)

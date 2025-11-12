@@ -18,7 +18,7 @@ form.addEventListener('submit', async (event) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}` // garante que o token é enviado correto
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify({ texto: comentarioTexto })
         });
