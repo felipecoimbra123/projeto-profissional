@@ -131,3 +131,75 @@ h2 {
         color: black;
     }
 }
+
+@media (max-width: 900px) {
+    
+    a {
+        font-size: 18px;
+    }
+
+    .main-form-problemas {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 600px) {
+    
+    header {
+        padding: 15px 5px;
+    }
+
+    ul {
+        justify-content: space-between; 
+        flex-wrap: wrap; 
+        row-gap: 5px; 
+    }
+
+    a {
+        font-size: 12px;
+    }
+    
+    .nav-header li {
+        margin: 0 2px;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    h2 {
+        font-size: 25px;
+        margin: 20px 0;
+        letter-spacing: 1px;
+    }
+
+    .main-form-problemas {
+        padding: 10px;
+    }
+
+    .form-problemas {
+        padding: 15px;
+    }
+    
+    .form-div {
+        padding: 5px;
+        gap: 8px;
+    }
+    
+    .form-div label{
+        font-size: 16px;
+    }
+
+    .form-div input {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .button-problemas {
+        width: 150px;
+        margin: 20px;
+        padding: 12px;
+        font-size: 14px;
+    }
+}

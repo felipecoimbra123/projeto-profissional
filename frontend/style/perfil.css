@@ -142,3 +142,135 @@ hr{
   border: none;
   border-radius: 0; 
 }
+
+@media (max-width: 900px) {
+    
+    a {
+        font-size: 18px;
+    }
+
+    .profile-container {
+        padding: 15px;
+    }
+    
+    .profile-header {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-info {
+        margin-top: 15px;
+    }
+    
+    .profile-stats {
+        justify-content: center;
+        gap: 30px;
+        font-size: 14px;
+    }
+    
+    .bio textarea {
+        max-width: 90%;
+        margin: 10px auto;
+        display: block;
+    }
+
+    .botao-edit-perfil {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    hr {
+        width: 100%;
+    }
+    
+    .profile-tabs {
+        gap: 100px;
+    }
+
+    .fotos-perfil {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+}
+
+@media (max-width: 600px) {
+    
+    header {
+        padding: 15px 5px;
+    }
+
+    ul {
+        justify-content: space-between; 
+        flex-wrap: wrap; 
+        row-gap: 5px; 
+    }
+
+    a {
+        font-size: 12px;
+    }
+    
+    .nav-header li {
+        margin: 0 2px;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+    }
+    
+    .profile-container {
+        padding: 10px;
+    }
+    
+    .profile-header {
+        padding-bottom: 10px;
+    }
+
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .profile-stats {
+        gap: 15px;
+        font-size: 12px;
+    }
+    
+    .nome-usuario {
+        font-size: 1.5em;
+    }
+    
+    .botao-edit-perfil {
+        font-size: 14px;
+        padding: 8px 10px;
+        width: 100%;
+        max-width: 180px;
+    }
+
+    .bio textarea{
+        font-size: 14px;
+        padding: 15px;
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .profile-tabs {
+        gap: 50px;
+    }
+
+    .profile-tabs svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .fotos-perfil {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 5px;
+    }
+}

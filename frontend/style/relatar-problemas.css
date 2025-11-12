@@ -130,3 +130,76 @@ a{
     min-height: 50px;
     border-bottom: none;
 }
+
+@media (max-width: 600px) {
+    
+    header {
+        padding: 15px 5px;
+    }
+
+    ul {
+        justify-content: space-between; 
+        flex-wrap: wrap; 
+        row-gap: 5px; 
+    }
+
+    header a {
+        font-size: 12px;
+    }
+    
+    .nav-header li {
+        margin: 0 2px;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+    .button-new-photo {
+        justify-content: center;
+        padding: 10px;
+    }
+
+    .button-new-photo a {
+        width: 180px;
+        font-size: 16px;
+        padding: 10px;
+    }
+    
+    .main-home {
+        padding: 0 10px;
+    }
+    
+    .section-relatar-problema {
+        margin-top: 30px;
+    }
+    
+    .card-header h2 {
+        font-size: 1.2em;
+    }
+    
+    .card-option {
+        padding: 15px;
+    }
+
+    .card-option h3 {
+        font-size: 1em;
+    }
+
+    .card-option p {
+        font-size: 0.8em;
+    }
+}
+
+@media (min-width: 601px) and (max-width: 900px) {
+    
+    header a {
+        font-size: 18px;
+    }
+    
+    .button-new-photo a {
+        width: 200px;
+        font-size: 18px;
+    }
+}

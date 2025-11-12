@@ -13,9 +13,11 @@ body{
     background-color: wheat;
 }
 
+/* ================== CABEÇALHO (HEADER) ================== */
+
 header{
     background-color: #FF6600;
-    padding: 30px;
+    padding: 30px 10px; 
 }
 
 ul{
@@ -23,6 +25,7 @@ ul{
     justify-content: space-around;
     align-items: center;
     list-style-type: none;
+    padding: 0; 
 }
 
 a{
@@ -31,11 +34,11 @@ a{
     color: white;
     font-size: 25px;
     font-family: "Lato", sans-serif;
+}
 
-    &:hover {
-        color: black;
-        transition: 0.4s;
-    }
+a:hover { 
+    color: black;
+    transition: 0.4s;
 }
 
 .profile-icon:hover{
@@ -43,6 +46,8 @@ a{
     cursor: pointer;
     transition: 0.4s;
 }
+
+/* ================== BOTÃO NOVA FOTO ================== */
 
 .button-new-photo{
     display: flex;
@@ -61,10 +66,13 @@ a{
     justify-content: space-around;
     font-size: 20px;
     border-radius: 10px;
+    text-transform: none; 
 }
 
+/* ================== TÍTULOS E LINHAS ================== */
+
 hr{
-    width: 400px;
+    width: 400px; 
     height: 2px;
     background-color: black;
     border: none;
@@ -75,27 +83,130 @@ h2{
     text-transform: uppercase;
     font-weight: 400;
     margin-left: 10px;
+    font-size: 24px; 
 }
 
 .div-home-photo{
     margin-top: 60px;
+    padding: 0 10px; 
 }
+
+/* ================== CARROSSEL DE IMAGENS ================== */
 
 .div-images{
     display: flex;
+    align-items: center; 
     margin-top: 20px;
+    padding: 0 10px;
+}
+
+/* Container onde as fotos são injetadas (NOVO) */
+#container-curtidas, #container-salvas {
+    display: flex;
+    flex-wrap: nowrap; 
+    overflow-x: auto;  /* Permite scroll horizontal */
+    -webkit-overflow-scrolling: touch; 
+    gap: 10px; 
+    padding: 10px 0; 
+    flex-grow: 1; 
+    margin: 0 10px; 
 }
 
 .div-images img{
-    padding: 10px;
+    min-width: 160px; /* Tamanho mínimo para carrossel */
     height: 160px;
+    object-fit: cover; 
+    border-radius: 5px;
 }
 
-.seta-direita-icon:hover{
+.div-images a {
+    text-transform: none;
+    font-size: initial;
+    padding: 0;
+}
+
+.seta-direita-icon, .seta-esquerda-icon {
+    flex-shrink: 0; /* Impede que as setas diminuam */
+}
+
+.seta-direita-icon:hover, .seta-esquerda-icon:hover{
     cursor: pointer;
 }
 
-.seta-esquerda-icon:hover{
-    cursor: pointer;
+@media (max-width: 600px) {
+    
+    header {
+        padding: 15px 5px;
+    }
+
+    ul {
+        justify-content: space-between; 
+        flex-wrap: wrap;
+        row-gap: 5px;
+    }
+
+    a {
+        font-size: 12px;
+    }
+    
+    .nav-header li {
+        margin: 0 2px;
+    }
+
+    .profile-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .button-new-photo {
+        justify-content: center; 
+        padding: 10px;
+    }
+
+    .button-new-photo a {
+        width: 180px; 
+        font-size: 16px;
+        padding: 10px;
+    }
+
+    h2 {
+        font-size: 18px;
+    }
+
+    hr {
+        width: 100%; 
+    }
+
+    .div-images img {
+        min-width: 120px; 
+        height: 120px;
+    }
+
+    .seta-direita-icon, .seta-esquerda-icon {
+        display: none;
+    }
+
+    #container-curtidas, #container-salvas {
+        margin: 0; 
+    }
 }
 
+@media (min-width: 601px) and (max-width: 900px) {
+    
+    a {
+        font-size: 18px;
+    }
+    
+    .button-new-photo a {
+        width: 200px;
+        font-size: 18px;
+    }
+    
+    hr {
+        width: 300px;
+    }
+    
+    .div-images img {
+        min-width: 140px;
+        height: 140px;
+    }
+}
