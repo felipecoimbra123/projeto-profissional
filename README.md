@@ -34,7 +34,7 @@
     - [x] Todos os campos dos formulários têm uma <label> associada. Deve ser atendido por conta de uma melhor experiência para o usuário e maior acessibilidade para deficientes visuais.
     - [x] São usados <fieldset> e <legend> para agrupar os vários campos nos formulários. Relevante para melhorar deficientes visuais a compreenderem melhor as estruturas do formulário. Relevante, ainda por ser totalmente implementado na aplicação.
     - [x] O envio dos formulários é feito via input/button e não através de links e JavaScript. Relevante, se torna acessível para leitores de tela e etc.
-    - [ ] Os erros nos formulários são indicados em texto e junto do campo que contém o erro. Não são mostrados o campo que contêm o erros, mas em texto sim. Não parece ser relevante para meu público-alvo.
+    - [x] Os erros nos formulários são indicados em texto e junto do campo que contém o erro. Não são mostrados o campo que contêm o erros, mas em texto sim. Não parece ser relevante para meu público-alvo.
 - [x] Uso da cor e elementos que piscam
     - [x] Não é usada apenas a cor para transmitir informação. Relevante para pessoas com Daltonismo e outras deficiência visuais relacionadas.
     - [x] Não há elementos que piscam ou mudam de cores repetidamente. Totalmente relevante, principalmente para garantir que usuários com epilepsia ou outras condições relacionadas possam navegar no site com segurança.
