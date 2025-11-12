@@ -30,8 +30,10 @@ Para que a aplicação funcione corretamente, siga os passos abaixo.
 
 ### 1. Clonagem do Repositório
 
+```
 git clone https://github.com/seu-usuario/nome-do-repositorio.git 
 cd nome-do-repositorio
+```
 
 # Acessibilidade
 - [x] Elementos não textuais
