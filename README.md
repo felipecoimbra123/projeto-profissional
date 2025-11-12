@@ -130,6 +130,14 @@ create table feedback(
 );
 ```
 
+### 5. Execução 
+Inicie o servidor backend:
+
+```
+cd backend
+npm start
+```
+
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
