@@ -224,4 +224,8 @@ if (usuarioQuery === "me") {
         buscarMeusLikes();
         buscarMeusSalvos();
     });
+} else {
+    document.addEventListener('DOMContentLoaded', () => {
+        buscarPerfilDeOutro(usuarioQuery);
+    });
 }
