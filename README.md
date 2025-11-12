@@ -40,6 +40,16 @@ cd nome-do-repositorio
 npm install express mysql2 cors dotenv multer jsonwebtoken swagger-jsdoc swagger-ui-express zod bcrypt
 ```
 
+### 3. Configuração do Ambiente
+Dentro do arquivo db_config.js, na pasta lib, preencha com suas credenciais do banco de dados
+```
+DB_HOST=localhost
+DB_USER=seu_usuario_mysql
+DB_PASSWORD=sua_senha_mysql
+DB_NAME=chat_app
+JWT_SECRET=defina_um_segredo_forte_aqui
+```
+
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
