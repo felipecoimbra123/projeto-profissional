@@ -150,7 +150,8 @@ app.get("/usuario", (req, res) => {
         return res.status(400).json({ success: false, message: "ID do usuário não fornecido." });
     }
 
-    const sql = "SELECT id, nome, email, imagemPerfil FROM usuario WHERE id = ?";
+    const sql = "SELECT u.id, u.nome, u.email, u.imagemPerfil, COUNT(DISTINCT l.id) AS total_likes_recebidos, COUNT(DISTINCT f2.id) AS total_favoritos_dados FROM usuario u LEFT JOIN fotografia f ON f.autor_id = u.id LEFT JOIN likes l ON l.post_id = f.id LEFT JOIN favorites f2 ON f2.user_id = u.id WHERE u.id = ? GROUP BY u.id, u.nome, u.email, u.seguidores, u.imagemPerfil, u.criadoEm;";
+    
     connection.query(sql, [userId], (err, resultados) => {
         if (err) {
             console.error("Erro ao buscar usuário por ID:", err);

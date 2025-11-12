@@ -183,6 +183,9 @@ async function buscarPerfilDeOutro(idUsuario) {
         if (data.success) {
             const usuario = data.data;
 
+            likeCountElement.textContent = usuario.total_likes_recebidos + " Likes";
+            savedCountElement.textContent = usuario.total_favoritos_dados + " Salvos";
+
             if (nomeElement) nomeElement.textContent = usuario.nome;
             if (profilePicElement && usuario.imagemPerfil) {
                 profilePicElement.src = `http://localhost:3000${usuario.imagemPerfil}`;
@@ -215,6 +218,7 @@ async function buscarFotosDoUsuario(idUsuario) {
       window.location.href = `fotografia.html?id=${foto.id}`;
     });
     fotosPerfilSection.appendChild(container);
+    postCountElement.textContent = data.data.length  + " Posts";
   });
 }
 
