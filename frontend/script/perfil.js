@@ -200,17 +200,22 @@ async function buscarPerfilDeOutro(idUsuario) {
 }
 
 async function buscarFotosDoUsuario(idUsuario) {
-    const resposta = await fetch(`http://localhost:3000/fotos/usuario?id=${idUsuario}`);
-    const data = await resposta.json();
+  const resposta = await fetch(
+    `http://localhost:3000/fotos/usuario?id=${idUsuario}`
+  );
+  const data = await resposta.json();
 
-    fotosPerfilSection.innerHTML = '';
+  fotosPerfilSection.innerHTML = "";
 
-    data.data.forEach(foto => {
-        const container = document.createElement('div');
-        container.classList.add('foto-item');
-        container.innerHTML = `<img src="http://localhost:3000${foto.url}" alt="">`;
-        fotosPerfilSection.appendChild(container);
+  data.data.forEach((foto) => {
+    const container = document.createElement("div");
+    container.classList.add("foto-item");
+    container.innerHTML = `<img src="http://localhost:3000${foto.url}" alt="">`;
+    container.addEventListener("click", () => {
+      window.location.href = `fotografia.html?id=${foto.id}`;
     });
+    fotosPerfilSection.appendChild(container);
+  });
 }
 
 
