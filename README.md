@@ -128,14 +128,6 @@ create table feedback(
     foreign key (autor_id) references usuario(id) ON DELETE SET NULL,
     criadoEm timestamp default current_timestamp
 );
-
-select * from usuario;
-select * from fotografia;
-select * from likes;
-select * from favorites;
-select * from feedback;
-
-drop database fotografia_pp;
 ```
 
 # Acessibilidade
