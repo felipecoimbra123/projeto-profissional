@@ -1,6 +1,6 @@
 async function carregarFotosMaisCurtidas() {
     try {
-        const resposta = await fetch('http://localhost:3000/fotos/maisCurtidas');
+        const resposta = await fetch('http://localhost:3000/maisCurtidas');
         // console.log('Status da resposta /fotos/maisCurtidas:', resposta.status);
         const data = await resposta.json();
         // console.log('Resposta JSON /fotos/maisCurtidas:', data);
@@ -32,7 +32,7 @@ async function carregarFotosMaisCurtidas() {
 
 async function carregarFotosMaisSalvas() {
     try {
-        const resposta = await fetch('http://localhost:3000/fotos/maisSalvas');
+        const resposta = await fetch('http://localhost:3000/maisSalvas');
         const data = await resposta.json();
 
         if (!data.success || data.fotos.length === 0) {

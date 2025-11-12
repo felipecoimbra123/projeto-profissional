@@ -690,7 +690,7 @@ app.delete('/comentarios/:id', autenticarToken, async (req, res) => {
 });
 
 //8 fotos mais curtidas
-app.get('/fotos/maisCurtidas', async (req, res) => {
+app.get('/maisCurtidas', async (req, res) => {
     try {
         const [results] = await connection.promise().query(`
             SELECT 
@@ -716,7 +716,7 @@ app.get('/fotos/maisCurtidas', async (req, res) => {
 });
 
 //8 fotos mais salvas
-app.get('/fotos/maisSalvas', async (req, res) => {
+app.get('/maisSalvas', async (req, res) => {
     try {
         const [results] = await connection.promise().query(`
             SELECT 
