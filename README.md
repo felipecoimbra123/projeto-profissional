@@ -20,6 +20,10 @@
 * CSS
 * JavaScript
 
+# Configuração e Instalação
+
+## Pré-requisitos
+
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
