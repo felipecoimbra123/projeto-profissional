@@ -46,8 +46,8 @@ Dentro do arquivo db_config.js, na pasta lib, preencha com suas credenciais do b
 DB_HOST=localhost
 DB_USER=seu_usuario_mysql
 DB_PASSWORD=sua_senha_mysql
-DB_NAME=chat_app
-JWT_SECRET=defina_um_segredo_forte_aqui
+DB_NAME=fotografia_pp
+JWT_SECRET=senha_muito_da_hora
 ```
 
 # Acessibilidade
