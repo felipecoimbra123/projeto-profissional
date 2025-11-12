@@ -20,10 +20,21 @@
 * CSS
 * JavaScript
 
-# Configuração e Instalação
+## 🚀 Configuração e Instalação
 
-## Pré-requisitos
+Para que a aplicação funcione corretamente, siga os passos abaixo.
 
+### Pré-requisitos
+
+Certifique-se de que os seguintes programas estejam instalados no seu ambiente:
+
+* **Node.js**
+
+* **Servidor MySQL**:
+
+### 1. Clonagem do Repositório
+
+Abra seu terminal e clone o código-fonte:
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
