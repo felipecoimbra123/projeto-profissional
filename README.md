@@ -25,10 +25,7 @@
 Para que a aplicação funcione corretamente, siga os passos abaixo.
 
 ### Pré-requisitos
-
-
 * **Node.js**
-
 * **Servidor MySQL**:
 
 ### 1. Clonagem do Repositório
