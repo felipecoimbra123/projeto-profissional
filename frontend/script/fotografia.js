@@ -254,7 +254,7 @@ document.getElementById("btn-editar-fotografia").addEventListener("click", () =>
 const btnExcluir = document.getElementById("btn-excluir-fotografia");
 
 btnExcluir.addEventListener("click", async () => {
-    const confirmacao = confirm("Tem certeza que deseja excluir este artigo?");
+    const confirmacao = confirm("Tem certeza que deseja excluir essa fotografia?");
     if (!confirmacao) return;
 
     try {
@@ -270,7 +270,7 @@ btnExcluir.addEventListener("click", async () => {
         const data = await response.json();
 
         if (data.success) {
-            alert("Artigo excluído com sucesso!");
+            alert("Fotografia Excluída com sucesso!");
             window.location.href = "perfil.html?user=me";
         } else {
             alert(data.message);
