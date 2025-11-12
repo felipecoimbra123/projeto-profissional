@@ -20,7 +20,7 @@
 * CSS
 * JavaScript
 
-## 🚀 Configuração e Instalação
+# 🚀 Configuração e Instalação
 
 Para que a aplicação funcione corretamente, siga os passos abaixo.
 
