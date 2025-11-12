@@ -357,7 +357,13 @@ app.get("/fotos/:id/comentarios", async (req, res) => {
     try {
         const { id } = req.params;
 
-        const query = ` SELECT c.texto, c.criadoEm, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil FROM comentario c JOIN usuario u ON c.autor_id = u.id WHERE c.fotografia = ? ORDER BY c.criadoEm DESC;`;
+        const query = `
+            SELECT c.id, c.texto, c.criadoEm, u.nome AS autorNome, u.imagemPerfil AS autorImagemPerfil
+            FROM comentario c
+            JOIN usuario u ON c.autor_id = u.id
+            WHERE c.fotografia = ?
+            ORDER BY c.criadoEm DESC;
+        `;
 
         const [results] = await connection.promise().query(query, [id]);
 
@@ -794,6 +800,35 @@ app.delete('/fotografia/:id', autenticarToken, async (req, res) => {
         return res.status(500).json({ success: false, message: "Erro ao excluir fotografia", error });
     }
 });
+
+app.delete('/comentarios/:id', autenticarToken, async (req, res) => {
+    const comentarioId = req.params.id;
+    const usuarioId = req.usuario.id;
+
+    try {
+        const queryBusca = 'SELECT * FROM comentario WHERE id = ?';
+        const [resultBusca] = await connection.promise().query(queryBusca, [comentarioId]);
+
+        if (resultBusca.length === 0) {
+            return res.status(404).json({ success: false, message: 'Comentário não encontrado.' });
+        }
+
+        const comentario = resultBusca[0];
+
+        if (comentario.autor_id !== usuarioId) {
+            return res.status(403).json({ success: false, message: 'Você não tem permissão para excluir este comentário.' });
+        }
+
+        const queryDelete = 'DELETE FROM comentario WHERE id = ?';
+        await connection.promise().query(queryDelete, [comentarioId]);
+
+        return res.json({ success: true, message: 'Comentário excluído com sucesso.' });
+    } catch (error) {
+        console.error('Erro ao excluir comentário:', error);
+        return res.status(500).json({ success: false, message: 'Erro interno ao excluir comentário.', error: error.message });
+    }
+});
+
 
 
 app.listen(port, () => {
