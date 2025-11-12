@@ -35,6 +35,11 @@ git clone https://github.com/seu-usuario/nome-do-repositorio.git
 cd nome-do-repositorio
 ```
 
+### 2. Instalações das Dependências
+```
+npm install express mysql2 cors dotenv multer jsonwebtoken swagger-jsdoc swagger-ui-express zod bcrypt
+```
+
 # Acessibilidade
 - [x] Elementos não textuais
     - [x] Todas as imagens têm um texto alternativo (alt). Isso deve ser atendido por conta da aplicação estar cheia de imagens, é algo necessário pensando nas pessoas deficientes visuais. Totalmente relevante, considerando que o público alvo são fotógrafos.
