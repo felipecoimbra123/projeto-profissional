@@ -12,20 +12,7 @@
 
 **Período:** Maio a Novembro de 2025
 
-Sobre:
-Este cronograma representa um **modelo padrão de desenvolvimento** do Projeto Profissional do curso técnico em Desenvolvimento de Sistemas. Ele está organizado por etapas mensais, indo do planejamento à entrega final, com tarefas genéricas que refletem o ciclo completo de uma aplicação.
-
-Cada aluno deve **personalizar este cronograma**, adaptando as tarefas à **realidade do seu próprio projeto**. Isso inclui:
-
-- Substituir ou detalhar tarefas com base nas **funcionalidades da sua aplicação**;
-- Adicionar tarefas específicas como **integração com APIs externas, relatórios, dashboards, gamificação, etc.**;
-- Inserir links, anotações ou subtarefas úteis ao seu processo de desenvolvimento;
-- Atualizar frequentemente o status de cada tarefa para que o professor possa acompanhar seu progresso.
-
-> Este documento será usado como ferramenta de acompanhamento e orientação ao longo do ano. Mantenha-o atualizado com responsabilidade.
->
-
-# Objetivo
+# Objetivo da Aplicação
 * Incentivar novos artistas, conscientizar e direcionar as pessoas a refletir sobre o quanto a fotografia pode ser importante para os dias de hoje, para eventos históricos e acontecimentos do passado. Além disso, será possível que os artistas publiquem suas próprias fotografias para fazer com que sua foto possa servir de inspiração para outros artistas, além de também ter um espaço onde é possivel escrever os próprios artigos para fornecer conhecimentos, informações e técnicas para outros usuários.
 
 # Tecnologias usadas
