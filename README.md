@@ -1,4 +1,4 @@
-# Desvalorização da Arte Fotográfica no Brasil
+# SOCIAL PICTURE
 
 # Projeto Profissional - Planejamento
 
