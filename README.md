@@ -1,7 +1,5 @@
 # SOCIAL PICTURE
 
-# Projeto Profissional - Planejamento
-
 **Aluno:** Felipe Coimbra Rocha dos Santos
 
 **Título do Projeto:** SOCIAL PICTURE: Aplicação para o enfrentamento da desvalorização da arte fotográfica no Brasil
