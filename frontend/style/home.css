@@ -1,122 +1,170 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sigmar&display=swap');
 
 
-*{
+:root {
+    --primary-color: #FF6600;
+    --secondary-color: #9966CC;
+    --background-light: #f0f0f3;
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --shadow-light: #ffffff;
+    --shadow-dark: #cecece;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    background-color: wheat;
+body {
+    background-color: whitesmoke;
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
 }
 
-/* ================== CABEÇALHO (HEADER) ================== */
-
-header{
-    background-color: #FF6600;
-    padding: 30px 10px; 
+header {
+    background-color: var(--primary-color);
+    padding: 15px 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-ul{
+.nav-header {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ul {
     display: flex;
     justify-content: space-around;
     align-items: center;
     list-style-type: none;
-    padding: 0; 
+    padding: 0;
 }
 
-a{
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-transform: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.site-logo {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+a {
     text-transform: uppercase;
     text-decoration: none;
-    color: white;
-    font-size: 25px;
-    font-family: "Lato", sans-serif;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-a:hover { 
-    color: black;
+a:hover {
+    color: var(--text-dark);
+    background-color: rgba(255, 255, 255, 0.8);
     transition: 0.4s;
 }
 
-.profile-icon:hover{
-    filter: invert();
+.profile-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.profile-icon:hover {
+    fill: var(--text-dark);
     cursor: pointer;
+    filter: none;
     transition: 0.4s;
 }
 
-/* ================== BOTÃO NOVA FOTO ================== */
-
-.button-new-photo{
+.button-new-photo {
     display: flex;
     justify-content: flex-end;
-    padding: 20px;
+    padding: 30px 40px;
 }
 
-.button-new-photo a{
-    border: none;
-    background-color: #9966CC;
-    color: white;
-    width: 250px;
-    cursor: pointer;
-    padding: 15px;
+.button-new-photo a {
+    background-color: var(--secondary-color);
+    color: var(--text-light);
+    width: 200px;
+    padding: 12px;
     display: flex;
-    justify-content: space-around;
-    font-size: 20px;
-    border-radius: 10px;
-    text-transform: none; 
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    border-radius: 12px;
+    text-transform: none;
+    font-weight: 600;
+    gap: 8px;
 }
 
-/* ================== TÍTULOS E LINHAS ================== */
+.plus-seta {
+    fill: white;
+}
 
-hr{
-    width: 400px; 
-    height: 2px;
-    background-color: black;
+.main-home {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+hr {
+    width: 100%;
+    height: 1px;
+    background-color: var(--shadow-dark);
     border: none;
+    margin-top: 5px;
 }
 
-h2{
-    font-family: "Lato", sans-serif;
-    text-transform: uppercase;
-    font-weight: 400;
+h2 {
+    font-family: 'Poppins', sans-serif;
+    text-transform: none;
+    font-weight: 600;
     margin-left: 10px;
-    font-size: 24px; 
+    font-size: 20px;
+    color: var(--primary-color);
 }
 
-.div-home-photo{
-    margin-top: 60px;
-    padding: 0 10px; 
+.div-home-photo {
+    margin-top: 40px;
+    padding: 0 40px;
 }
 
-/* ================== CARROSSEL DE IMAGENS ================== */
-
-.div-images{
+.div-images {
     display: flex;
-    align-items: center; 
+    align-items: center;
     margin-top: 20px;
-    padding: 0 10px;
+    padding: 0 40px;
 }
 
-/* Container onde as fotos são injetadas (NOVO) */
 #container-curtidas, #container-salvas {
     display: flex;
-    flex-wrap: nowrap; 
-    overflow-x: auto;  /* Permite scroll horizontal */
-    -webkit-overflow-scrolling: touch; 
-    gap: 10px; 
-    padding: 10px 0; 
-    flex-grow: 1; 
-    margin: 0 10px; 
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 20px;
+    padding: 10px 0;
+    flex-grow: 1;
+    margin: 0;
 }
 
-.div-images img{
-    min-width: 160px; /* Tamanho mínimo para carrossel */
-    height: 160px;
-    object-fit: cover; 
-    border-radius: 5px;
+.div-images img {
+    min-width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    transition: all 0.3s ease;
+}
+
+.div-images img:hover {
+    transform: translateY(-3px);
 }
 
 .div-images a {
@@ -125,86 +173,27 @@ h2{
     padding: 0;
 }
 
-.seta-direita-icon, .seta-esquerda-icon {
-    flex-shrink: 0; /* Impede que as setas diminuam */
-}
+@media (max-width: 768px) {
 
-.seta-direita-icon:hover, .seta-esquerda-icon:hover{
-    cursor: pointer;
-}
-
-@media (max-width: 600px) {
-    
-    header {
-        padding: 15px 5px;
+    .div-home-photo, .div-images {
+        padding: 0 10px;
     }
 
-    ul {
-        justify-content: space-between; 
-        flex-wrap: wrap;
-        row-gap: 5px;
-    }
-
-    a {
-        font-size: 12px;
-    }
-    
-    .nav-header li {
-        margin: 0 2px;
-    }
-
-    .profile-icon {
-        width: 30px;
-        height: 30px;
-    }
     .button-new-photo {
-        justify-content: center; 
-        padding: 10px;
+        justify-content: center;
+        padding: 20px 10px;
     }
 
     .button-new-photo a {
-        width: 180px; 
-        font-size: 16px;
-        padding: 10px;
+        width: 100%;
+        max-width: 200px;
     }
 
-    h2 {
-        font-size: 18px;
-    }
-
-    hr {
-        width: 100%; 
-    }
-
-    .div-images img {
-        min-width: 120px; 
-        height: 120px;
-    }
-
-    .seta-direita-icon, .seta-esquerda-icon {
-        display: none;
-    }
-
-    #container-curtidas, #container-salvas {
-        margin: 0; 
-    }
-}
-
-@media (min-width: 601px) and (max-width: 900px) {
-    
     a {
-        font-size: 18px;
+        font-size: 14px;
+        padding: 5px;
     }
-    
-    .button-new-photo a {
-        width: 200px;
-        font-size: 18px;
-    }
-    
-    hr {
-        width: 300px;
-    }
-    
+
     .div-images img {
         min-width: 140px;
         height: 140px;

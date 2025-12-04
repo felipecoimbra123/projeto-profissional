@@ -1,70 +1,94 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sigmar&display=swap');
 
 
-*{
+:root {
+    --primary-color: #FF6600;
+    --secondary-color: #9966CC;
+    --background-light: #f0f0f3;
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --shadow-light: #ffffff;
+    --shadow-dark: #cecece;
+}
+
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    background-color: wheat;
+body {
+    background-color: whitesmoke;
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
 }
 
-header{
-    background-color: #FF6600;
-    padding: 30px;
+header {
+    background-color: var(--primary-color);
+    padding: 15px 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-ul{
+.nav-header {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ul {
     display: flex;
     justify-content: space-around;
     align-items: center;
     list-style-type: none;
+    padding: 0;
 }
 
-.nav-header a {
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-transform: none;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.site-logo {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+header a {
     text-transform: uppercase;
     text-decoration: none;
-    color: white;
-    font-size: 25px;
-    font-family: "Lato", sans-serif;
+    color: var(--text-light);
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.nav-header a:hover {
-    color: black;
+header a:hover {
+    color: var(--text-dark);
+    background-color: rgba(255, 255, 255, 0.8);
     transition: 0.4s;
 }
 
-.autor-link {
-    font-size: 16px; 
-    text-transform: none; 
-    color: white; 
-    text-decoration: none;
-    transition: color 0.2s;
-}
-
-.autor-link:hover {
-    color: #FFC0CB;
-    text-decoration: underline; 
-}
-
-.photo-title {
-    font-size: 18px;
+.main-content a{
     color: white;
-    background-color: #333;
-    padding: 10px;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    font-family: 'Lato', sans-serif;
+    text-decoration: none;
 }
 
-.profile-icon:hover{
-    filter: invert();
+.profile-icon {
+    width: 30px;
+    height: 30px;
+}
+
+.profile-icon:hover {
+    fill: var(--text-dark);
     cursor: pointer;
+    filter: none;
     transition: 0.4s;
 }
 
