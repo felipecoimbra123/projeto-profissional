@@ -1,145 +1,174 @@
-@import url('https://fonts.googleapis.com/css2?family=Abel&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Sigmar&display=swap');
 
-*{
+* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-body{
-    background-color: wheat;
+body {
+    background-color: whitesmoke;
+    color: var(--text-dark);
+    font-family: 'Poppins', sans-serif;
 }
 
-header{
+header {
     background-color: #FF6600;
-    padding: 30px;
+    padding: 15px 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-ul{
+.nav-header {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+ul {
     display: flex;
     justify-content: space-around;
     align-items: center;
     list-style-type: none;
+    padding: 0;
 }
 
-a{
+.logo-link {
+    display: flex;
+    align-items: center;
+    text-transform: none;
+    font-size: 20px;
+    font-weight: 700;
+}
 
+.site-logo {
+    width: 150px;
+    height: 150px;
+    margin-right: 10px;
+    border-radius: 50%;
+}
+
+a {
     text-transform: uppercase;
     text-decoration: none;
     color: white;
-    font-size: 25px;
-    font-family: "Lato", sans-serif;
-
-    &:hover {
-        color: black;
-        transition: 0.4s;
-    }
+    font-size: 16px;
+    font-weight: 600;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
-.profile-icon:hover{
-    filter: invert();
-    cursor: pointer;
+a:hover {
+    color: black;
+    background-color: rgba(255, 255, 255, 0.8);
     transition: 0.4s;
 }
 
-.button-new-photo{
-    display: flex;
-    justify-content: flex-end;
-    padding: 20px;
+.profile-icon {
+    width: 30px;
+    height: 30px;
 }
 
-.button-new-photo a{
-    border: none;
-    background-color: #9966CC;
-    color: white;
-    width: 250px;
+.profile-icon:hover {
+    fill: black;
     cursor: pointer;
-    padding: 15px;
-    display: flex;
-    justify-content: space-around;
-    font-size: 20px;
-    border-radius: 10px;
+    filter: none;
+    transition: 0.4s;
 }
 
 .main-form-problemas{
-    margin: 0 auto;
-    padding: 30px;
+    display: flex;
     justify-content: center;
+    align-items: center;
+    padding: 30px;
     max-width: 550px;
+    margin: 50px auto;
 }
 
 .form-problemas{
-    border-radius: 10px;
-    padding: 20px;
-    background-color: rgb(251, 251, 251);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    width: 100%;
+    border-radius: 12px;
+    padding: 30px;
+    background-color: #ffffff;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
-    font-family: "Lexend", sans-serif;
+    font-family: "Poppins", sans-serif;
     text-transform: uppercase;
-    font-weight: 200;
+    font-weight: 700;
     text-align: center;
-    font-size: 35px;
-    margin: 40px;
-    letter-spacing: 2px;
+    font-size: 28px;
+    color: #FF6600;
+    margin: 10px 0 30px 0;
+    letter-spacing: 1px;
 }
 
 .form-div {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    padding: 7px;
     gap: 10px;
+    margin-bottom: 20px;
 }
 
 .form-div label{
-    font-size: 20px;
+    font-size: 16px;
     font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    color: #333333;
 }
 
-.form-div input {
-    font-size: 15px;
+.form-div input,
+.form-div textarea {
+    font-size: 16px;
     outline: none;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-family: 'Poppins', sans-serif;
+    resize: vertical;
 }
+
+.form-div input:focus,
+.form-div textarea:focus {
+    border-color: #FF6600;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.2);
+}
+
 
 .div-button-problemas {
     display: flex;
     justify-content: center;
+    margin-top: 20px;
 }
 
 .button-problemas {
-    width: 200px;
-    margin: 30px;
+    width: 250px;
     padding: 15px;
     border: none;
-    font-size: 15px;
-    border-radius: 20px;
-    color: #f5f5f5;
+    font-size: 18px;
+    border-radius: 8px;
+    color: white;
     background-color: #FF6600;
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+    font-weight: 600;
     cursor: pointer;
+    transition: 0.3s;
+}
 
-    &:hover{
-        transition: 0.2s;
-        color: black;
-    }
+.button-problemas:hover {
+    background-color: #e05500;
+    color: white;
+    opacity: 1;
 }
 
 @media (max-width: 900px) {
-    
     a {
-        font-size: 18px;
+        font-size: 14px;
+        padding: 5px 8px;
     }
-
     .main-form-problemas {
-        padding: 20px;
+        padding: 15px;
     }
 }
 
@@ -150,56 +179,46 @@ h2 {
     }
 
     ul {
-        justify-content: space-between; 
         flex-wrap: wrap; 
-        row-gap: 5px; 
+        row-gap: 8px; 
+    }
+
+    .logo-link {
+        font-size: 18px;
     }
 
     a {
         font-size: 12px;
     }
-    
-    .nav-header li {
-        margin: 0 2px;
-    }
 
-    .profile-icon {
+    .site-logo {
         width: 30px;
         height: 30px;
     }
     
+    .profile-icon {
+        width: 25px;
+        height: 25px;
+    }
+    
     h2 {
-        font-size: 25px;
+        font-size: 24px;
         margin: 20px 0;
         letter-spacing: 1px;
     }
 
     .main-form-problemas {
+        margin: 20px auto;
         padding: 10px;
     }
 
     .form-problemas {
-        padding: 15px;
+        padding: 20px;
     }
     
-    .form-div {
-        padding: 5px;
-        gap: 8px;
-    }
-    
-    .form-div label{
-        font-size: 16px;
-    }
-
-    .form-div input {
-        font-size: 14px;
-        padding: 12px;
-    }
-
     .button-problemas {
-        width: 150px;
-        margin: 20px;
-        padding: 12px;
-        font-size: 14px;
+        width: 100%;
+        max-width: 200px;
+        font-size: 16px;
     }
 }
