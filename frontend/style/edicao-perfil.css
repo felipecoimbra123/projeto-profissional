@@ -9,12 +9,12 @@
 }
 
 body {
-    background-color: #f4f4f4;
-    font-family: 'Poppins', sans-serif;
+   background: linear-gradient(135deg, #ff7f23c3, #fe6a0050);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .main-form {
