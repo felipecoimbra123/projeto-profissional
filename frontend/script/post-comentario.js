@@ -1,13 +1,14 @@
 const form = document.querySelector('.form-post-fotografia');
-const inputDescricao = document.getElementById('descricao');
+const inputComentario = document.getElementById('comentario');
 
 form.addEventListener('submit', async (event) => {
     event.preventDefault();
 
-    const comentarioTexto = inputDescricao.value.trim();
+    const comentarioTexto = inputComentario.value.trim();
     if (!comentarioTexto) return alert("O comentário não pode ser vazio.");
 
-    const fotoId = new URLSearchParams(window.location.search).get("fotoid") || new URLSearchParams(window.location.search).get("id");
+    const fotoId = new URLSearchParams(window.location.search).get("fotoid") 
+                || new URLSearchParams(window.location.search).get("id");
     if (!fotoId) return alert("Foto não encontrada.");
 
     const token = localStorage.getItem('usuario');

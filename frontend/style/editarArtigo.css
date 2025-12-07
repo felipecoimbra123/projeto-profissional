@@ -1,5 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Handjet:wght@100..900&family=Sora:wght@100..800&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap');
+/* ARQUIVO editarArtigo.css - Estilo Moderno e Limpo (SEM ALTERAR O HTML) */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
 
 * {
     margin: 0;
@@ -8,107 +11,148 @@
 }
 
 body {
-    background: linear-gradient(#ff7f23c3, #fe6a0050) no-repeat;
-    background-size: cover;
+    /* Fundo com gradiente e centralizado */
+    background: linear-gradient(135deg, #ff7f23c3, #fe6a0050);
     min-height: 100vh;
-    min-height: 100svh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Poppins', sans-serif;
 }
 
 .main-form {
-    margin: 0 auto;
-    padding: 30px;
-    justify-content: center;
-    max-width: 550px;
+    padding: 20px;
+    width: 100%;
+    max-width: 650px; 
 }
 
 .form-edicao-perfil {
-    border-radius: 10px;
-    padding: 20px;
-    background-color: rgb(251, 251, 251);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    border-radius: 12px;
+    padding: 30px;
+    background-color: #ffffff; /* Fundo branco limpo */
+    /* Remove o backdrop-filter, que não funciona bem em fundos opacos */
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
 h2 {
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
-    font-weight: 200;
+    font-weight: 700;
     text-align: center;
-    font-size: 35px;
-    margin: 40px;
-    letter-spacing: 2px;
+    font-size: 28px;
+    color: #FF6600; /* Cor primária */
+    margin: 10px 0 30px 0;
+    letter-spacing: 1px;
 }
 
 .form-div {
     display: flex;
-    justify-content: center;
     flex-direction: column;
-    padding: 7px;
+    padding: 10px 0;
     gap: 10px;
 }
 
-.form-div label{
-    font-size: 20px;
+.form-div label {
+    font-size: 16px;
     font-family: 'Lato', sans-serif;
+    font-weight: 600;
+    color: #333333;
 }
 
-.form-div input {
+/* Estilização para input de texto (Aplica-se a Título e Conteúdo, conforme seu HTML) */
+.form-div input[type='text'] {
     font-size: 15px;
     outline: none;
-    padding: 15px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-family: 'Poppins', sans-serif;
+    transition: border-color 0.3s;
+    min-height: 50px; 
+}
+
+.form-div input:focus {
+    border-color: #FF6600;
+    box-shadow: 0 0 0 2px rgba(255, 102, 0, 0.1);
 }
 
 .div-button-edicao-perfil {
     display: flex;
     justify-content: center;
-}
-
-.div-button-excluir-perfil {
-    display: flex;
-    justify-content: center;
+    margin-top: 20px;
 }
 
 .button-editar-perfil {
-    width: 200px;
-    margin: 30px;
+    width: 250px;
+    margin: 20px 0 10px 0;
     padding: 15px;
     border: none;
-    font-size: 15px;
-    border-radius: 20px;
-    color: #f5f5f5;
+    font-size: 18px;
+    border-radius: 8px;
+    color: white;
     background-color: #FF6600;
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+    font-weight: 700;
     cursor: pointer;
-
-    &:hover{
-        opacity: 0.5;
-        color: black;
-    }
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(255, 102, 0, 0.4);
 }
 
-hr{
-    border-width: 1px;
-    border-style: solid;
-    border-color: black;
+.button-editar-perfil:hover {
+    background-color: #e05500;
+    opacity: 1; 
+}
+
+/* Estilo para botão de exclusão (mantido caso você use em outra div) */
+.div-button-excluir-perfil {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
 }
 
 .button-excluir-perfil {
-    width: 200px;
-    margin: 30px;
+    width: 250px;
+    margin: 10px 0;
     padding: 15px;
     border: none;
-    font-size: 15px;
-    border-radius: 20px;
-    color: #f5f5f5;
-    background-color: red;
+    font-size: 18px;
+    border-radius: 8px;
+    color: white;
+    background-color: #dc3545; 
     font-family: "Lexend", sans-serif;
     text-transform: uppercase;
+    font-weight: 700;
     cursor: pointer;
+    transition: background-color 0.3s;
+    box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+}
 
-    &:hover{
-        opacity: 0.5;
-        color: black;
+.button-excluir-perfil:hover {
+    background-color: #c82333;
+}
+
+hr {
+    border: none;
+    height: 1px;
+    background-color: #ccc;
+    margin: 30px 0;
+}
+
+/* Responsividade */
+@media (max-width: 680px) {
+    .main-form {
+        padding: 10px;
+    }
+    .form-edicao-perfil {
+        padding: 20px;
+    }
+    h2 {
+        font-size: 24px;
+        margin: 20px 0;
+    }
+    .button-editar-perfil, .button-excluir-perfil {
+        width: 100%;
+        font-size: 16px;
     }
 }

@@ -145,98 +145,147 @@ a:hover {
 }
 
 .div-fotografia-comentario{
-    margin: 15px;
     display: flex;
-    gap: 52px;
+    justify-content: space-between;
     align-items: center;
+    margin: 30px 0 20px 0;
+    padding-top: 20px;
+    border-top: 1px solid #ddd; 
 }
 
-hr{
-    max-width: 500px;
-    width: 100%;
-    height: 2px;
-    background-color: black;
-    border: none;
+.div-fotografia-comentario h2{
+    font-family: 'Poppins', sans-serif;
+    font-size: 22px;
+    color: var(--text-dark);
+    font-weight: 700;
 }
 
 .link-post-fotografia{
-    border: none;
     background-color: #9966CC;
     color: white;
-    width: 250px;
-    cursor: pointer;
-    padding: 5px;
+    width: 200px;
+    padding: 10px;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
     align-items: center;
-    font-size: 15px;
-    border-radius: 10px;
+    font-size: 14px;
+    border-radius: 6px;
+    gap: 5px;
+    text-transform: none;
+    font-weight: 600;
+    transition: background-color 0.3s;
+}
+
+.link-post-fotografia:hover {
+    background-color: #804da6;
+    color: #ffffff;
+}
+
+.link-post-fotografia .plus-seta {
+    fill: white;
+    width: 18px;
+    height: 18px;
+}
+
+hr{
+    display: none; 
+}
+
+.section-comentario{
+    padding-bottom: 30px;
 }
 
 .article-comentario{
-    background-color: #ff660063;
-    margin-top: 20px;
-    max-width: 500px;
-    padding: 10px;
-    border-radius: 20px;
+    background-color: #FFD8A8;
+    margin-top: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
 }
 
 .article-comentario p{
     font-family: 'Lato', sans-serif;
+    font-size: 15px;
+    color: #444;
+    margin-top: 10px;
+    padding-left: 5px;
 }
 
-.article-comentario div{
+.article-comentario div{ 
     display: flex;
-    margin: 20px;
-    gap: 20px;
+    gap: 15px;
     align-items: center;
+    margin: 0;
+    padding: 5px 0;
 }
 
 .article-comentario div span{
-    border-bottom: 2px solid black;
-    padding-bottom: 7px;
-    font-size: 20px;
+    border-bottom: none;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-dark);
 }
 
 .article-comentario .img-perfil-comentario{
     border-radius: 50%;
-    height: 40px;
+    height: 35px;
+    width: 35px;
+    object-fit: cover;
+    border: 1px solid #ccc;
 }
 
 .like-comentario{
     margin-left: auto;
+    fill: #555;
 }
 
 .like-comentario:hover{
     cursor: pointer;
-    fill: blue;
+    fill: var(--primary-color);
     transition: 0.2s;
 }
 
+.btn-delete-comentario {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-left: 10px; 
+    transition: background-color 0.3s;
+}
+
+.btn-delete-comentario:hover {
+    background-color: #c82333;
+}
+
 .avaliacao-estrela {
-  display: inline-block;
+    display: inline-block;
 }
 
 .avaliacao-estrela input[type="radio"] {
-  display: none;
+    display: none;
     border: 1px solid black;
 }
 
 .avaliacao-estrela label {
-  float: right;
-  padding: 5px;
-  font-size: 24px;
-  color: #ccc;
-  cursor: pointer;
+    float: right;
+    padding: 5px;
+    font-size: 24px;
+    color: #ccc;
+    cursor: pointer;
 }
 
 .avaliacao-estrela input[type="radio"]:checked ~ label {
-  color: gold;
+    color: gold;
 }
 
 .avaliacao-estrela label:hover,
 .avaliacao-estrela label:hover ~ label {
-  color: gold;
+    color: gold;
 }
 
 svg{
@@ -332,21 +381,6 @@ svg{
     margin-bottom: 20px;
 }
 
-.btn-delete-comentario {
-    background: red;
-    color: #fff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: .3s;
-}
-
-.btn-delete-comentario:hover {
-    cursor: pointer;
-}
-
 @media (max-width: 600px) {
     
     header {
@@ -423,6 +457,7 @@ svg{
         width: 100%;
     }
 
+    /* Comentários em mobile (Ajuste para o novo estilo) */
     .div-fotografia-comentario {
         flex-direction: column;
         align-items: flex-start;
